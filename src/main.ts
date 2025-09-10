@@ -1,10 +1,10 @@
 import { createApp } from "vue";
-import {defineRoutes} from './model/router.ts'
+import {defineRoutes} from '@/model/router'
 import {createRouter, createWebHistory} from 'vue-router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
-import "./assets/styles/main.css";
-import App from "./App.vue";
+import "@/assets/styles/main.css";
+import App from "@/App.vue";
 
 export const router = createRouter({
     routes: defineRoutes,

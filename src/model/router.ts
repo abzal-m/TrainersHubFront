@@ -1,7 +1,7 @@
 import type  { RouteRecordRaw } from 'vue-router'
-import LandingPage from "../pages/LandingPage.vue";
-import Index from "../pages/Index.vue";
-import TestStrava from "../pages/TestStrava.vue";
+import LandingPage from "@/pages/LandingPage.vue";
+import Index from "@/pages/Index.vue";
+import TestStrava from "@/pages/TestStrava.vue";
 
 export const defineRoutes: RouteRecordRaw[] =  [
   { path: "/", name: "Index", component: Index },

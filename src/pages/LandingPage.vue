@@ -30,8 +30,8 @@
 </template>
 <script setup lang="ts">
 import {ref, onMounted} from "vue";
-import AppTopbar from "../components/AppTopbar.vue";
-import {api} from "../api";
+import AppTopbar from "@/components/AppTopbar.vue";
+import {api} from "@/api";
 
 const data = ref();
 onMounted(async () => {
