@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import {Routes, defineRoutes} from './model/router.ts'
+import {defineRoutes} from './model/router.ts'
 import {createRouter, createWebHistory} from 'vue-router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
