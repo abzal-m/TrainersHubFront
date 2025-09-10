@@ -2,8 +2,10 @@ import { createApp } from "vue";
 import {defineRoutes} from '@/model/router'
 import {createRouter, createWebHistory} from 'vue-router'
 import PrimeVue from 'primevue/config';
-import Aura from '@primeuix/themes/aura';
+import Material from '@primeuix/themes/material';
+
 import "@/assets/styles/main.css";
+import 'primeflex/primeflex.css';
 import App from "@/App.vue";
 
 export const router = createRouter({
@@ -17,7 +19,7 @@ const app = createApp(App);
 app.use(router);
 app.use(PrimeVue, {
     theme: {
-        preset: Aura,
+        preset: Material,
         options: {
             darkModeSelector: ".p-dark",
         }

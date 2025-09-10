@@ -11,11 +11,16 @@ declare module 'vue' {
     AppConfig: typeof import('./src/components/AppConfig.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppTopbar: typeof import('./src/components/AppTopbar.vue')['default']
+    Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
+    Card: typeof import('primevue/card')['default']
+    Dock: typeof import('primevue/dock')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
   export interface GlobalDirectives {
     StyleClass: typeof import('primevue/styleclass')['default']
+    Tooltip: typeof import('primevue/tooltip')['default']
   }
 }
