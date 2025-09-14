@@ -4,8 +4,11 @@ import {createRouter, createWebHistory} from 'vue-router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 
+
 import "@/assets/styles/main.css";
 import 'primeflex/primeflex.css';
+import "tailwindcss";
+
 import App from "@/App.vue";
 
 export const router = createRouter({

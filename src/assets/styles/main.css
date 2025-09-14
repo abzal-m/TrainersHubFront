@@ -1,5 +1,6 @@
-@import "primeicons/primeicons.css";
 
+@import "primeicons/primeicons.css";
+@import "tailwindcss";
 html {
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -23,7 +24,7 @@ body {
     background-color: var(--p-surface-50);
     color: var(--p-surface-950);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;

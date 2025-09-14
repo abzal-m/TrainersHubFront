@@ -18,7 +18,7 @@
         <span class="font-bold text-xl">TrainersHub</span>
       </div>
     </template>
-    <Button label="Войти" class="p-button-text p-button-secondary w-full justify-start pl-3 py-2" />
+    <Button label="Войти" @click="login" class="p-button-text p-button-secondary w-full justify-start pl-3 py-2" />
     <Button label="Регистрация" class="p-button-primary p-button-rounded w-full justify-start pl-3 py-2 mt-2" />
 
 
@@ -29,36 +29,19 @@
 import { ref } from 'vue';
 import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
-import Divider from 'primevue/divider';
+import {router} from "@/main";
+import {Routes} from "@/model/router";
 
 const sidebarVisible = ref(false);
 
-const items = ref([
-  {
-    label: 'Главная',
-    icon: 'pi pi-home',
-    url: '#hero' // Пример ссылки на секцию
-  },
-  {
-    label: 'Для атлетов',
-    icon: 'pi pi-user',
-    url: '#athletes'
-  },
-  {
-    label: 'Для тренеров',
-    icon: 'pi pi-users',
-    url: '#coaches'
-  },
-  {
-    label: 'Контакты',
-    icon: 'pi pi-envelope',
-    url: '#contact'
-  }
-]);
+
 
 const toggleMenu = () => {
   sidebarVisible.value = !sidebarVisible.value;
 };
+const login = () => {
+  router.push({name: Routes.AuthForm});
+}
 </script>
 
 <style scoped>

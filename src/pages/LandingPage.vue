@@ -1,6 +1,6 @@
 <template>
   <AppHeader></AppHeader>
-  <div class="landing-page">
+  <div class="layout-container">
 
 
     <!-- Hero Section -->
