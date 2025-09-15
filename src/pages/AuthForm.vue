@@ -2,9 +2,9 @@
 import {computed, ref} from "vue";
 import Card from "primevue/card";
 import Button from "primevue/button";
-import { zodResolver } from '@primevue/forms/resolvers/zod';
+import {zodResolver} from '@primevue/forms/resolvers/zod';
 import {z} from 'zod';
-import { useToast } from 'primevue/usetoast';
+import {useToast} from 'primevue/usetoast';
 
 const activeTab = ref(0);
 const email = ref('')
@@ -23,24 +23,24 @@ const toast = useToast();
 
 const resolver = zodResolver(
     z.object({
-      email: z.string().min(1, { message: 'Введите почту' }),
-      password: z.string().min(1, { message: 'Введите пароль' }),
-      login: z.string().min(1, { message: 'Введите ваше полное имя' }),
+      email: z.string().min(1, {message: 'Введите почту'}),
+      password: z.string().min(1, {message: 'Введите пароль'}),
+      login: z.string().min(1, {message: 'Введите ваше полное имя'}),
     })
 );
 
-const onFormLogin = ({ valid }) => {
+const onFormLogin = ({valid}) => {
   console.log(valid)
   if (valid) {
-    toast.add({ severity: 'success', summary: 'Вы вошли в систему', life: 3000 });
+    toast.add({severity: 'success', summary: 'Вы вошли в систему', life: 3000});
     console.log(email.value, password.value, login.value);
   }
 };
 
-const onFormRegister = ({ valid }) => {
+const onFormRegister = ({valid}) => {
   console.log(valid)
   if (valid) {
-    toast.add({ severity: 'success', summary: 'Вы успешно зарегистрировались', life: 3000 });
+    toast.add({severity: 'success', summary: 'Вы успешно зарегистрировались', life: 3000});
     console.log(email.value, password.value, login.value);
   }
 };
@@ -58,7 +58,7 @@ const onFormRegister = ({ valid }) => {
     <Card class="mb-2">
 
       <template #content>
-        <Toast />
+        <Toast/>
         <Tabs value='0' scrollable>
           <TabList>
             <Tab class="w-6" @click="changeActiveTab(0)" value="0">Вход</Tab>
@@ -70,14 +70,29 @@ const onFormRegister = ({ valid }) => {
               <div class="card flex justify-center">
                 <Form :resolver @submit="onFormLogin" class="flex flex-col gap-4 w-full sm:w-56">
                   <FormField v-slot="$field" name="email" initialValue="" class="flex flex-col gap-1">
-                    <InputText v-model="email" type="text" placeholder="Почта" />
-                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <i class="pi pi-at"></i>
+                      </InputGroupAddon>
+                      <InputText v-model="email" type="text" placeholder="Почта"/>
+                    </InputGroup>
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                      {{ $field.error?.message }}
+                    </Message>
                   </FormField>
                   <FormField v-slot="$field" name="password" initialValue="" class="flex flex-col gap-1">
-                    <InputText v-model="password" type="text" placeholder="Пароль" />
-                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <i class="pi pi-key"></i>
+                      </InputGroupAddon>
+                      <InputText v-model="password" type="text" placeholder="Пароль"/>
+                    </InputGroup>
+
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                      {{ $field.error?.message }}
+                    </Message>
                   </FormField>
-                  <Button class="bt" type="submit" severity="success" label="Войти" />
+                  <Button class="bt" type="submit" severity="success" label="Войти"/>
                 </Form>
               </div>
 
@@ -86,18 +101,40 @@ const onFormRegister = ({ valid }) => {
               <div class="card flex justify-center">
                 <Form :resolver @submit="onFormRegister" class="flex flex-col gap-4 w-full sm:w-56">
                   <FormField v-slot="$field" name="login" initialValue="" class="flex flex-col gap-1">
-                    <InputText v-model="login" type="text" placeholder="Полное имя" />
-                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <i class="pi pi-user-plus"></i>
+                      </InputGroupAddon>
+                      <InputText v-model="login" type="text" placeholder="Полное имя"/>
+                    </InputGroup>
+
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                      {{ $field.error?.message }}
+                    </Message>
                   </FormField>
                   <FormField v-slot="$field" name="email" initialValue="" class="flex flex-col gap-1">
-                    <InputText v-model="email" type="text" placeholder="Почта" />
-                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <i class="pi pi-at"></i>
+                      </InputGroupAddon>
+                      <InputText v-model="email" type="text" placeholder="Почта"/>
+                    </InputGroup>
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                      {{ $field.error?.message }}
+                    </Message>
                   </FormField>
                   <FormField v-slot="$field" name="password" initialValue="" class="flex flex-col gap-1">
-                    <InputText v-model="password" type="text" placeholder="Пароль" />
-                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <i class="pi pi-key"></i>
+                      </InputGroupAddon>
+                      <InputText v-model="password" type="text" placeholder="Пароль"/>
+                    </InputGroup>
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                      {{ $field.error?.message }}
+                    </Message>
                   </FormField>
-                  <Button class="bt" type="submit" severity="success" label="Создать аккаунт" />
+                  <Button class="bt" type="submit" severity="success" label="Создать аккаунт"/>
                 </Form>
               </div>
             </TabPanel>
