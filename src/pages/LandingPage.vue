@@ -6,8 +6,8 @@
     <!-- Hero Section -->
 
     <section class="text-center p-2">
-      <img  class="w-full p-button-rounded" src="@/assets/images/landingTitle.png"></img>
-      <h1 class="text-3xl font-bold mb-4">Умные тренировки для современных атлетов</h1>
+      <img  class="w-full p-button-rounded" src="@/assets/images/landingTitle.png"/>
+      <h1 class="text-3xl font-bold mb-4 mt-4">Умные тренировки для современных атлетов</h1>
       <p class="text-lg mb-4">Приложение для спортсменов и тренеров. Легко планируй и отслеживай тренировки.</p>
       <Button label="" class="p-button-rounded p-button-md w-full text-sm/6 font-semibold text-white">Стартуй сейчас <span aria-hidden="true">→</span></Button>
     </section>
@@ -18,9 +18,9 @@
       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Для атлетов</h2>
       <p class="text-xl md:text-2xl mb-12 text-gray-700 dark:text-gray-300">Твои суперсилы в кармане, всегда с тобой.</p>
     </section>
-    <Card class="feature-card mb-2">
+    <Card class="feature-card">
       <template #title>
-        <div class="flex items-center gap-4 mb-3">
+        <div class="flex items-center gap-4 mb-2">
           <i class="pi pi-user text-3xl text-blue-500"></i>
           <span class="font-bold text-xl">Профессиональный тренер</span>
         </div>
@@ -29,7 +29,7 @@
         <span class="text-gray-700 dark:text-gray-300">Персональные тренировки, разработанные исходя из ваших уникальных целей и физических данных.</span>
       </template>
     </Card>
-    <Card class="feature-card mb-2">
+    <Card class="feature-card">
       <template #title>
         <div class="flex items-center gap-4 mb-3">
           <i class="pi pi-chart-line text-3xl text-green-500"></i>
@@ -40,7 +40,7 @@
         <span class="text-gray-700 dark:text-gray-300">Детальная аналитика, интерактивные графики и предиктивные модели для отслеживания ваших результатов.</span>
       </template>
     </Card>
-    <Card class="feature-card mb-2">
+    <Card class="feature-card">
       <template #title>
         <div class="flex items-center gap-4 mb-3">
           <i class="pi pi-calendar text-3xl text-yellow-500"></i>
@@ -51,7 +51,7 @@
         <span class="text-gray-700 dark:text-gray-300">Автоматическая адаптация под ваш ритм жизни с интеллектуальными напоминаниями и гибкими планами.</span>
       </template>
     </Card>
-    <Card class="feature-card mb-2">
+    <Card class="feature-card">
       <template #title>
         <div class="flex items-center gap-4 mb-3">
           <i class="pi pi-comments text-3xl text-purple-500"></i>
@@ -64,11 +64,11 @@
     </Card>
     <Divider/>
 
-    <section class="text-center p-2">
+    <section class="text-center">
       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Для тренеров</h2>
       <p class="text-xl md:text-2xl mb-12 text-gray-700 dark:text-gray-300">Управляйте командой чемпионов эффективно в одном приложении.</p>
     </section>
-    <Card class="feature-card mb-2">
+    <Card class="feature-card">
       <template #title>
         <div class="flex items-center gap-4 mb-3">
           <i class="pi pi-users text-3xl text-red-500"></i>
@@ -79,7 +79,7 @@
         <span class="text-gray-700 dark:text-gray-300">Централизованное управление всеми вашими подопечными и их тренировочными планами.</span>
       </template>
     </Card>
-    <Card class="feature-card mb-2">
+    <Card class="feature-card">
       <template #title>
         <div class="flex items-center gap-4 mb-3">
           <i class="pi pi-chart-pie text-3xl text-cyan-500"></i>

@@ -3,6 +3,7 @@ import {defineRoutes} from '@/model/router'
 import {createRouter, createWebHistory} from 'vue-router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
+import ToastService from 'primevue/toastservice';
 
 
 import "@/assets/styles/main.css";
@@ -28,4 +29,5 @@ app.use(PrimeVue, {
         }
     }
 });
+app.use(ToastService);
 app.mount("#app");

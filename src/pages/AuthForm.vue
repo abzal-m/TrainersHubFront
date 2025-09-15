@@ -2,12 +2,41 @@
 import {computed, ref} from "vue";
 import Card from "primevue/card";
 import Button from "primevue/button";
+import { zodResolver } from '@primevue/forms/resolvers/zod';
+import {z} from 'zod';
+import { useToast } from 'primevue/usetoast';
 
-const tabs = [{title: 'Login', value: 'Login', content: 'content1'}, {
-  title: 'Register',
-  value: 'Register',
-  content: 'content2'
-}]
+const activeTab = ref(0);
+const email = ref('')
+const password = ref('')
+const login = ref('')
+const changeActiveTab = (tab: number) => {
+  if (tab !== activeTab.value) {
+    activeTab.value = tab;
+    email.value = ''
+    password.value = ''
+    login.value = ''
+  }
+}
+
+const toast = useToast();
+
+const resolver = zodResolver(
+    z.object({
+      email: z.string().min(1, { message: 'Введите почту' }),
+      password: z.string().min(1, { message: 'Введите пароль' }),
+      login: z.string().min(1, { message: 'Введите ваше полное имя' }),
+    })
+);
+
+const onFormSubmit = ({ valid }) => {
+  console.log(valid)
+  if (valid) {
+    toast.add({ severity: 'success', summary: 'Вы вошли в систему', life: 3000 });
+    console.log(email.value, password.value, login.value);
+  }
+};
+
 </script>
 
 <template>
@@ -21,14 +50,48 @@ const tabs = [{title: 'Login', value: 'Login', content: 'content1'}, {
     <Card class="mb-2">
 
       <template #content>
-        <Tabs value='Login' scrollable>
+        <Toast />
+        <Tabs value='0' scrollable>
           <TabList>
-            <Tab class="w-6" v-for="tab in tabs" :key="tab.title" :value="tab.value">{{ tab.title }}</Tab>
-
+            <Tab class="w-6" @click="changeActiveTab(0)" value="0">Вход</Tab>
+            <Tab class="w-6" @click="changeActiveTab(1)" value="1">Регистрация</Tab>
           </TabList>
           <TabPanels>
-            <TabPanel v-for="tab in tabs" :key="tab.content" :value="tab.value">
-              <p class="m-0">{{ tab.content }}</p>
+            <TabPanel value="0" class="">
+
+              <div class="card flex justify-center">
+                <Form :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
+                  <FormField v-slot="$field" name="email" initialValue="" class="flex flex-col gap-1">
+                    <InputText v-model="email" type="text" placeholder="Почта" />
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                  </FormField>
+                  <FormField v-slot="$field" name="password" initialValue="" class="flex flex-col gap-1">
+                    <InputText v-model="password" type="text" placeholder="Пароль" />
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                  </FormField>
+                  <Button class="bt" type="submit" severity="success" label="Войти" />
+                </Form>
+              </div>
+
+            </TabPanel>
+            <TabPanel value="1">
+              <div class="card flex justify-center">
+                <Form :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
+                  <FormField v-slot="$field" name="login" initialValue="" class="flex flex-col gap-1">
+                    <InputText v-model="login" type="text" placeholder="Полное имя" />
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                  </FormField>
+                  <FormField v-slot="$field" name="email" initialValue="" class="flex flex-col gap-1">
+                    <InputText v-model="email" type="text" placeholder="Почта" />
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                  </FormField>
+                  <FormField v-slot="$field" name="password" initialValue="" class="flex flex-col gap-1">
+                    <InputText v-model="password" type="text" placeholder="Пароль" />
+                    <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
+                  </FormField>
+                  <Button class="bt" type="submit" severity="success" label="Создать аккаунт" />
+                </Form>
+              </div>
             </TabPanel>
           </TabPanels>
         </Tabs>
