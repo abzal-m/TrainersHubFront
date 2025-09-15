@@ -29,10 +29,18 @@ const resolver = zodResolver(
     })
 );
 
-const onFormSubmit = ({ valid }) => {
+const onFormLogin = ({ valid }) => {
   console.log(valid)
   if (valid) {
     toast.add({ severity: 'success', summary: 'Вы вошли в систему', life: 3000 });
+    console.log(email.value, password.value, login.value);
+  }
+};
+
+const onFormRegister = ({ valid }) => {
+  console.log(valid)
+  if (valid) {
+    toast.add({ severity: 'success', summary: 'Вы успешно зарегистрировались', life: 3000 });
     console.log(email.value, password.value, login.value);
   }
 };
@@ -60,7 +68,7 @@ const onFormSubmit = ({ valid }) => {
             <TabPanel value="0" class="">
 
               <div class="card flex justify-center">
-                <Form :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
+                <Form :resolver @submit="onFormLogin" class="flex flex-col gap-4 w-full sm:w-56">
                   <FormField v-slot="$field" name="email" initialValue="" class="flex flex-col gap-1">
                     <InputText v-model="email" type="text" placeholder="Почта" />
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
@@ -76,7 +84,7 @@ const onFormSubmit = ({ valid }) => {
             </TabPanel>
             <TabPanel value="1">
               <div class="card flex justify-center">
-                <Form :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
+                <Form :resolver @submit="onFormRegister" class="flex flex-col gap-4 w-full sm:w-56">
                   <FormField v-slot="$field" name="login" initialValue="" class="flex flex-col gap-1">
                     <InputText v-model="login" type="text" placeholder="Полное имя" />
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{ $field.error?.message }}</Message>
