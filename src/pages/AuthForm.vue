@@ -93,7 +93,7 @@ const onFormRegister = ({valid}) => {
                       {{ $field.error?.message }}
                     </Message>
                   </FormField>
-                  <Button class="bt" type="submit" severity="success" label="Войти"/>
+                  <Button class="bt" type="submit" severity="primary" label="Войти"/>
                 </Form>
               </div>
 
@@ -145,7 +145,7 @@ const onFormRegister = ({valid}) => {
                       <label for="trainer">Тренер</label>
                     </div>
                   </div>
-                  <Button class="bt" type="submit" severity="success" label="Создать аккаунт"/>
+                  <Button class="bt" type="submit" severity="primary" label="Создать аккаунт"/>
                 </Form>
               </div>
             </TabPanel>

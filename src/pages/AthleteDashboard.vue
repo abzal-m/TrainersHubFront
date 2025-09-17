@@ -1,12 +1,14 @@
 <template>
   <div class="card dock-demo">
-    <div class="dock-window">
+    <div class="dock-window ">
       <Dock :model="items" :position="position" :pt="{
+        listContainer: 'bg-gray-100',
+
         item: 'px-2',
         itemlink: 'w-5rem h-4rem'
       }">
         <template #itemicon="{ item }">
-          <i :class="item.icon" style="font-size: 2.1rem; color: #615e5e" @click="onDockItemClick(item?.label)"></i>
+          <i :class="item.icon" style="font-size: 2.1rem" @click="onDockItemClick(item?.label)"></i>
         </template>
       </Dock>
     </div>
@@ -23,23 +25,23 @@ const onDockItemClick = (item: string) => {
 const items = ref([
   {
     label: 'Home',
-    icon: 'pi pi-home',
+    icon: 'pi pi-home text-blue-700',
     title: 'Главная',
   },
   {
     label: 'Calendar',
-    icon: 'pi pi-calendar',
+    icon: 'pi pi-calendar text-blue-700',
     title: 'Календарь',
 
   },
   {
     label: 'Statistics',
-    icon: 'pi pi-chart-line',
+    icon: 'pi pi-chart-line text-blue-700',
     title: 'Статистика',
   },
   {
     label: 'Profile',
-    icon: 'pi pi-user',
+    icon: 'pi pi-user text-blue-700',
     title: 'Профиль',
   }
 ]);
@@ -52,7 +54,7 @@ const position = ref('bottom');
   width: 100%;
   height: 100vh;
   position: relative;
-  background-color: #cdcdcd;
+  background-color: rgb(255, 255, 255);
   background-repeat: no-repeat;
   background-size: cover;
   z-index: 1;
