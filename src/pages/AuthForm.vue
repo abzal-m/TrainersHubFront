@@ -10,6 +10,7 @@ const activeTab = ref(0);
 const email = ref('')
 const password = ref('')
 const login = ref('')
+const userType = ref('athlete')
 const changeActiveTab = (tab: number) => {
   if (tab !== activeTab.value) {
     activeTab.value = tab;
@@ -25,7 +26,7 @@ const resolver = zodResolver(
     z.object({
       email: z.string().min(1, {message: 'Введите почту'}),
       password: z.string().min(1, {message: 'Введите пароль'}),
-      login: z.string().min(1, {message: 'Введите ваше полное имя'}),
+      login: z.string().min(1, {message: 'Введите ваше полное имя'})
     })
 );
 
@@ -41,7 +42,7 @@ const onFormRegister = ({valid}) => {
   console.log(valid)
   if (valid) {
     toast.add({severity: 'success', summary: 'Вы успешно зарегистрировались', life: 3000});
-    console.log(email.value, password.value, login.value);
+    console.log(email.value, password.value, login.value, userType.value);
   }
 };
 
@@ -134,6 +135,16 @@ const onFormRegister = ({valid}) => {
                       {{ $field.error?.message }}
                     </Message>
                   </FormField>
+                  <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center gap-2">
+                      <RadioButton v-model="userType" inputId="athlete" name="pizza" value="athlete"/>
+                      <label for="athlete">Атлет</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <RadioButton v-model="userType" inputId="trainer" name="pizza" value="trainer"/>
+                      <label for="trainer">Тренер</label>
+                    </div>
+                  </div>
                   <Button class="bt" type="submit" severity="success" label="Создать аккаунт"/>
                 </Form>
               </div>
