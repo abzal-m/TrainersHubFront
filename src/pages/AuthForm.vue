@@ -23,7 +23,7 @@ const changeActiveTab = (tab: number) => {
 }
 const goDashboard = () => {
   if (userType.value === 'athlete') {
-    router.push({names: Routes.AthleteDashboard})
+    router.push({name: Routes.AthleteDashboard})
   }
 }
 
