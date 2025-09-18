@@ -6,11 +6,12 @@ import {Routes} from "@/model/router";
 import { useLayout } from "@/composables/useLayout.js";
 import AppConfig from "@/components/AppConfig.vue";
 
-const { isDarkMode, toggleDarkMode } = useLayout();
+
 
 const router = useRouter();
 router.replace({name: Routes.LandingPage});
 onMounted(async () => {
-  toggleDarkMode()
+
 });
+
 </script>

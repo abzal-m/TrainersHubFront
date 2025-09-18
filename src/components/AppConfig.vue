@@ -36,7 +36,7 @@ const { primaryColors, surfaces, primary, surface, isDarkMode, updateColors } = 
                                     ? surface === s.name
                                     : isDarkMode
                                     ? s.name === 'zinc'
-                                    : s.name === 'slate',
+                                    : s.name === 'gray',
                             },
                         ]"
               :style="{ backgroundColor: s.palette['500'] }"

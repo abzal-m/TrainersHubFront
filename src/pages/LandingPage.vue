@@ -9,7 +9,7 @@
       <img  class="w-full p-button-rounded" src="@/assets/images/landingTitle.png"/>
       <h1 class="text-3xl font-bold mb-4 mt-4">Умные тренировки для современных атлетов</h1>
       <p class="text-lg mb-4">Приложение для спортсменов и тренеров. Легко планируй и отслеживай тренировки.</p>
-      <Button label="" class="p-button-rounded p-button-md w-full text-sm/6 font-semibold text-white">Стартуй сейчас <span aria-hidden="true">→</span></Button>
+      <Button @click="toAuth" class="p-button-rounded p-button-md w-full text-sm/6 font-semibold text-white">Стартуй сейчас <span aria-hidden="true">→</span></Button>
     </section>
 
     <Divider/>
@@ -98,6 +98,7 @@
         Присоединяйтесь к TrainersHub сегодня и откройте для себя новый уровень спортивных достижений.
       </p>
       <Button
+          @click="toAuth"
           label="Начать сейчас →"
           class="p-button-rounded p-button-lg bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 text-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
       />
@@ -113,7 +114,11 @@
 import Button from "primevue/button";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
 
-
+const toAuth = () => {
+  router.push({name: Routes.AuthForm});
+}
 </script>
 

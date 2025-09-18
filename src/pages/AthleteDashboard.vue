@@ -1,14 +1,14 @@
 <template>
-  <AppTopbar v-if="view=='Home'"/>
+
   <AppHeader v-if="view=='Calendar'"/>
   <Dock :model="items" :position="position" :pt="{
-        listContainer: 'bg-gray-100',
+        listContainer: { class: 'bg-zinc text-zinc-contrast' },
 
         item: 'px-2',
-        itemlink: 'w-5rem h-4rem'
+        itemlink: 'w-5rem h-3rem'
       }">
     <template #itemicon="{ item }">
-      <i :class="item.icon" style="font-size: 2.1rem" @click="onDockItemClick(item?.label)"></i>
+      <i :class="item.icon" style="font-size: 2rem" @click="onDockItemClick(item?.label)"></i>
     </template>
   </Dock>
 </template>
@@ -25,23 +25,23 @@ const onDockItemClick = (item: string) => {
 const items = ref([
   {
     label: 'Home',
-    icon: 'pi pi-home text-blue-700',
+    icon: 'pi pi-home text-zinc-contrast',
     title: 'Главная',
   },
   {
     label: 'Calendar',
-    icon: 'pi pi-calendar text-blue-700',
+    icon: 'pi pi-calendar text-zinc-contrast',
     title: 'Календарь',
 
   },
   {
     label: 'Statistics',
-    icon: 'pi pi-chart-line text-blue-700',
+    icon: 'pi pi-chart-line text-zinc-contrast',
     title: 'Статистика',
   },
   {
     label: 'Profile',
-    icon: 'pi pi-user text-blue-700',
+    icon: 'pi pi-user text-zinc-contrast',
     title: 'Профиль',
   }
 ]);

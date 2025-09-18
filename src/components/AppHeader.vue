@@ -1,5 +1,5 @@
 <template>
-  <Menubar class="p-menubar-root sticky top-0 z-50 shadow-md">
+  <Menubar class="p-menubar-root sticky top-0 z-50 shadow-lg" >
     <template #start>
       <div class="flex items-center gap-2">
         <span class="font-bold text-xl app-name">TrainersHub</span>
@@ -7,7 +7,11 @@
     </template>
     <template #end>
       <div class="md:hidden">
-        <Button icon="pi pi-bars" class="p-button-text p-button-secondary" @click="toggleMenu" />
+
+        <Button type="button" class="topbar-theme-button" @click="toggleDarkMode" text rounded>
+          <i :class="['pi ', 'pi ', { 'pi-moon': isDarkMode, 'pi-sun': !isDarkMode }]" />
+        </Button>
+        <Button icon="pi pi-bars" class="p-button-text p-button-secondary" @click="toggleMenu"/>
       </div>
     </template>
   </Menubar>
@@ -18,22 +22,22 @@
         <span class="font-bold text-xl">TrainersHub</span>
       </div>
     </template>
-    <Button label="Войти" @click="login" class="p-button-text p-button-secondary w-full justify-start pl-3 py-2" />
-    <Button label="Регистрация" class="p-button-primary p-button-rounded w-full justify-start pl-3 py-2 mt-2" />
+    <Button label="Войти" @click="login" class="p-button-text p-button-secondary w-full justify-start pl-3 py-2"/>
+    <Button label="Регистрация" class="p-button-primary p-button-rounded w-full justify-start pl-3 py-2 mt-2"/>
 
 
   </Sidebar>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref} from 'vue';
 import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
 import {router} from "@/main";
 import {Routes} from "@/model/router";
-
+import {useLayout} from "@/composables/useLayout"
+const { isDarkMode, toggleDarkMode } = useLayout();
 const sidebarVisible = ref(false);
-
 
 
 const toggleMenu = () => {
@@ -47,7 +51,7 @@ const login = () => {
 <style scoped>
 /* Стили для Menubar и Sidebar */
 .p-menubar-root {
-  background-color: var(--surface-0); /* Используем переменную темы PrimeVue для фона */
+
   border-bottom: 1px solid var(--surface-border); /* Легкая граница */
   padding: 0.75rem 1.5rem; /* Отступы */
 }
@@ -61,6 +65,7 @@ const login = () => {
   color: var(--text-color);
   text-decoration: none;
 }
+
 .p-sidebar .p-sidebar-content ul a:hover {
   background-color: var(--surface-hover);
 }

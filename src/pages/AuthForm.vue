@@ -25,6 +25,9 @@ const goDashboard = () => {
   if (userType.value === 'athlete') {
     router.push({name: Routes.AthleteDashboard})
   }
+  if (userType.value === 'trainer') {
+    router.push({name: Routes.LandingPage})
+  }
 }
 
 const toast = useToast();
@@ -93,7 +96,8 @@ const onFormRegister = ({valid}) => {
                       <InputGroupAddon>
                         <i class="pi pi-key"></i>
                       </InputGroupAddon>
-                      <InputText v-model="password" type="text" placeholder="Пароль"/>
+                      <Password name="password" v-model="password" placeholder="Пароль" :feedback="false" fluid />
+<!--                      <InputText v-model="password" type="text" placeholder="Пароль"/>-->
                     </InputGroup>
 
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
@@ -136,7 +140,7 @@ const onFormRegister = ({valid}) => {
                       <InputGroupAddon>
                         <i class="pi pi-key"></i>
                       </InputGroupAddon>
-                      <InputText v-model="password" type="text" placeholder="Пароль"/>
+                      <Password name="password" v-model="password" placeholder="Пароль" :feedback="false" fluid />
                     </InputGroup>
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
                       {{ $field.error?.message }}
