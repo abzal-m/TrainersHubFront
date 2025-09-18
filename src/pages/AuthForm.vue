@@ -5,6 +5,8 @@ import Button from "primevue/button";
 import {zodResolver} from '@primevue/forms/resolvers/zod';
 import {z} from 'zod';
 import {useToast} from 'primevue/usetoast';
+import {router} from "@/main";
+import {Routes} from "@/model/router";
 
 const activeTab = ref(0);
 const email = ref('')
@@ -17,6 +19,11 @@ const changeActiveTab = (tab: number) => {
     email.value = ''
     password.value = ''
     login.value = ''
+  }
+}
+const goDashboard = () => {
+  if (userType.value === 'athlete') {
+    router.push({names: Routes.AthleteDashboard})
   }
 }
 
@@ -93,7 +100,7 @@ const onFormRegister = ({valid}) => {
                       {{ $field.error?.message }}
                     </Message>
                   </FormField>
-                  <Button class="bt" type="submit" severity="primary" label="Войти"/>
+                  <Button class="bt" type="submit" severity="primary" @click="goDashboard" label="Создать аккаунт"/>
                 </Form>
               </div>
 
@@ -145,7 +152,7 @@ const onFormRegister = ({valid}) => {
                       <label for="trainer">Тренер</label>
                     </div>
                   </div>
-                  <Button class="bt" type="submit" severity="primary" label="Создать аккаунт"/>
+                  <Button class="bt" type="submit" severity="primary" @click="goDashboard" label="Создать аккаунт"/>
                 </Form>
               </div>
             </TabPanel>
