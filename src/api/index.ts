@@ -1,28 +1,75 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import {clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
+
+
 
 export const createInternalAxios = () => {
-  const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    withCredentials: true,
-  });
-  return instance;
+    const instance = axios.create({
+        baseURL: import.meta.env.VITE_API_URL,
+        withCredentials: true, // для refresh-токена в HttpOnly Cookie
+    });
+
+    // 🔹 Request interceptor
+    instance.interceptors.request.use((config) => {
+        const token = getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    });
+
+    // 🔹 Response interceptor
+    instance.interceptors.response.use(
+        (response) => response,
+        async (error: AxiosError) => {
+            const originalRequest = error.config as any;
+
+            if (error.response?.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+
+                try {
+                    const res = await axios.post(
+                        `${import.meta.env.VITE_API_URL}/api/Account/refresh`,
+                        {},
+                        { withCredentials: true }
+                    );
+
+                    const newToken = (res.data as any).accessToken;
+                    setAccessToken(newToken);
+
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    return instance(originalRequest);
+                } catch (refreshError) {
+                    clearAccessToken();
+                    window.location.href = "/login";
+                }
+            }
+
+            return Promise.reject(error);
+        }
+    );
+
+    return instance;
 };
+
 export const internalAxios = createInternalAxios();
+
 export const api = {
-  getStraveActivity: async () => {
-    var result = await internalAxios.get("api/StravaActivity/GetLastActivity");
-    return result.data
-  },
-  // updateBugStatus:async (data: BugsData) => {
-  //     return await internalAxios.post('api/Tasks/UpdateBugs', data)
-  // },
-  // getTaskList:async () => {
-  //     return await internalAxios.get('api/Tasks/GetAllTaskList')
-  // },
-  // updateTaskList:async (data: TasksData) => {
-  //     return await internalAxios.post('api/Tasks/UpdateTasks', data)
-  // },
-  // getBugListById:async (data: string) => {
-  //     return await internalAxios.get('api/Tasks/GetBugListById/' + data)
-  // }
+    getStravaActivity: async () => {
+        const result = await internalAxios.get("api/StravaActivity/GetLastActivity");
+        return result.data;
+    },
+    login: async (data: { username: string; password: string }) => {
+        const res = await internalAxios.post("api/Account/login", data);
+        return res.data; // { accessToken, refreshToken }
+    },
+
+    register: async (data: { username: string; password: string; role: string }) => {
+        const res = await internalAxios.post("api/Account/register", data);
+        return res.data; // { id, username, role }
+    },
+    secure: async () => {
+        const res = await internalAxios.get("api/Account/secure");
+        return res.data;
+    }
 };

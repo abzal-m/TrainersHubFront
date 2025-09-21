@@ -1,5 +1,5 @@
 <template>
-  <Menubar class="p-menubar-root sticky top-0 z-50 shadow-lg" >
+  <Menubar class="p-menubar-root sticky top-0 z-50 shadow-lg">
     <template #start>
       <div class="flex items-center gap-2">
         <span class="font-bold text-xl app-name">TrainersHub</span>
@@ -9,24 +9,12 @@
       <div class="md:hidden">
 
         <Button type="button" class="topbar-theme-button" @click="toggleDarkMode" text rounded>
-          <i :class="['pi ', 'pi ', { 'pi-moon': isDarkMode, 'pi-sun': !isDarkMode }]" />
+          <i :class="['pi ', 'pi ', { 'pi-moon': isDarkMode, 'pi-sun': !isDarkMode }]"/>
         </Button>
-        <Button icon="pi pi-bars" class="p-button-text p-button-secondary" @click="toggleMenu"/>
+        <Button @click="login" icon="pi pi-sign-in" type="button" class="topbar-theme-button"/>
       </div>
     </template>
   </Menubar>
-
-  <Sidebar v-model:visible="sidebarVisible" position="right">
-    <template #header>
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-xl">TrainersHub</span>
-      </div>
-    </template>
-    <Button label="Войти" @click="login" class="p-button-text p-button-secondary w-full justify-start pl-3 py-2"/>
-    <Button label="Регистрация" class="p-button-primary p-button-rounded w-full justify-start pl-3 py-2 mt-2"/>
-
-
-  </Sidebar>
 </template>
 
 <script setup lang="ts">
@@ -36,16 +24,25 @@ import Button from 'primevue/button';
 import {router} from "@/main";
 import {Routes} from "@/model/router";
 import {useLayout} from "@/composables/useLayout"
-const { isDarkMode, toggleDarkMode } = useLayout();
+import {checkAuth} from "@/utils/auth";
+
+const {isDarkMode, toggleDarkMode} = useLayout();
 const sidebarVisible = ref(false);
 
 
 const toggleMenu = () => {
   sidebarVisible.value = !sidebarVisible.value;
 };
-const login = () => {
-  router.push({name: Routes.AuthForm});
+const login = async () => {
+  const isAuthorized = await checkAuth()
+  if (!isAuthorized.isAuth) {
+    router.push({name: Routes.AuthForm});
+  } else {
+    router.push({name: Routes.AthleteDashboard});
+  }
 }
+
+
 </script>
 
 <style scoped>
