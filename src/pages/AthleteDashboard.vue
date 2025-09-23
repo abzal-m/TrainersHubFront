@@ -1,6 +1,8 @@
 <template>
 
   <AppHeader v-if="view=='Calendar'"/>
+  <AthleteProfile v-if="view=='Profile'"/>
+  <AthleteStatistics v-if="view=='Statistics'"/>
   <Dock :model="items" :position="position" :pt="{
         listContainer: { class: 'bg-zinc text-zinc-contrast' },
 
@@ -15,6 +17,7 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
+import AthleteStatistics from "@/components/AthleteStatistics.vue";
 const view = ref('Home');
 
 const onDockItemClick = (item: string) => {

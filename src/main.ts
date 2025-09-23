@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import {defineRoutes} from '@/model/router'
+import {defineRoutes, Routes} from '@/model/router'
 import {createRouter, createWebHistory} from 'vue-router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
@@ -12,12 +12,22 @@ import "tailwindcss";
 
 import App from "@/App.vue";
 import { definePreset } from '@primeuix/themes';
+import {getAccessToken, isTokenValid} from "@/utils/auth";
 
 export const router = createRouter({
     routes: defineRoutes,
     history: createWebHistory(import.meta.env.VITE_APP_BASE_URL),
 })
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth) {
+        const token = getAccessToken();
 
+        if (!isTokenValid(token)) {
+            return next({ name: Routes.LandingPage });
+        }
+    }
+    next();
+});
 const MyPreset = definePreset(Aura, {
     semantic: {
         colorScheme: {

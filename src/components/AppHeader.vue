@@ -34,6 +34,7 @@ const toggleMenu = () => {
   sidebarVisible.value = !sidebarVisible.value;
 };
 const login = async () => {
+
   const isAuthorized = await checkAuth()
   if (!isAuthorized.isAuth) {
     router.push({name: Routes.AuthForm});

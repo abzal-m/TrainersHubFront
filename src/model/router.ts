@@ -4,6 +4,7 @@ import Index from "@/pages/Index.vue";
 import TestStrava from "@/pages/TestStrava.vue";
 import AuthForm from "@/pages/AuthForm.vue";
 import AthleteDashboard from "@/pages/AthleteDashboard.vue";
+import {getAccessToken, isTokenValid} from "@/utils/auth";
 
 export const defineRoutes: RouteRecordRaw[] = [
     { path: "/", name: "Index", component: Index },
@@ -13,13 +14,13 @@ export const defineRoutes: RouteRecordRaw[] = [
         path: "/AthleteDashboard",
         name: "AthleteDashboard",
         component: AthleteDashboard,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: "/TestStrava",
         name: "TestStrava",
         component: TestStrava,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
 ];
 
@@ -30,25 +31,3 @@ export enum Routes {
     AthleteDashboard = "AthleteDashboard",
     TestStrava = "TestStrava",
 }
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes: defineRoutes,
-});
-
-// ====== Проверка токена перед каждым переходом ======
-router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem("access_token");
-
-    if (to.meta.requiresAuth && !token) {
-        // Нет токена → отправляем на страницу логина
-        next({ name: Routes.AuthForm });
-    } else if (to.name === Routes.AuthForm && token) {
-        // Уже есть токен → не пускаем на логин, редиректим в кабинет
-        next({ name: Routes.AthleteDashboard });
-    } else {
-        next();
-    }
-});
-
-export default router;

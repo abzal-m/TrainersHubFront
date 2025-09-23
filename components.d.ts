@@ -9,9 +9,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppConfig: typeof import('./src/components/AppConfig.vue')['default']
-    AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
-    AppTopbar: typeof import('./src/components/AppTopbar.vue')['default']
+    AthleteProfile: typeof import('./src/components/AthleteProfile.vue')['default']
+    AthleteStatistics: typeof import('./src/components/AthleteStatistics.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
     ButtonGroup: typeof import('primevue/buttongroup')['default']

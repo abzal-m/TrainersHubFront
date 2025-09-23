@@ -41,7 +41,7 @@ export const createInternalAxios = () => {
                     return instance(originalRequest);
                 } catch (refreshError) {
                     clearAccessToken();
-                    window.location.href = "/login";
+                    window.location.href = "/AuthForm";
                 }
             }
 
@@ -71,5 +71,10 @@ export const api = {
     secure: async () => {
         const res = await internalAxios.get("api/Account/secure");
         return res.data;
+    },
+    exit: async () => {
+        const res = await internalAxios.post("api/Account/logout");
+        return res.data;
     }
+
 };
