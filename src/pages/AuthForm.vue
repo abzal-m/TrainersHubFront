@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import {computed, ref} from "vue";
 import Card from "primevue/card";
 import Button from "primevue/button";
-import { zodResolver } from "@primevue/forms/resolvers/zod";
-import { z } from "zod";
-import { useToast } from "primevue/usetoast";
-import { router } from "@/main";
-import { Routes } from "@/model/router";
-import { api } from "@/api/index";
+import {zodResolver} from "@primevue/forms/resolvers/zod";
+import {z} from "zod";
+import {useToast} from "primevue/usetoast";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
+import {api} from "@/api/index";
 
 const activeTab = ref(0);
 const email = ref("");
 const password = ref("");
-const login = ref("");
+const userName = ref("");
 const userType = ref("athlete");
 
 const toast = useToast();
@@ -22,29 +22,29 @@ const changeActiveTab = (tab: number) => {
     activeTab.value = tab;
     email.value = "";
     password.value = "";
-    login.value = "";
+    userName.value = "";
   }
 };
 
 const goDashboard = () => {
   if (userType.value === "athlete") {
-    router.push({ name: Routes.AthleteDashboard });
+    router.push({name: Routes.AthleteDashboard});
   }
   if (userType.value === "trainer") {
-    router.push({ name: Routes.LandingPage });
+    router.push({name: Routes.LandingPage});
   }
 };
 
 const resolver = zodResolver(
     z.object({
-      email: z.string().min(1, { message: "Введите почту" }),
-      password: z.string().min(1, { message: "Введите пароль" }),
-      login: z.string().min(1, { message: "Введите ваше полное имя" }),
+      email: z.string().min(1, {message: "Введите почту"}),
+      password: z.string().min(1, {message: "Введите пароль"}),
+      userName: z.string().min(1, {message: "Введите ваше полное имя"}),
     })
 );
 
 // ===== ЛОГИН =====
-const onFormLogin = async ({ valid }) => {
+const onFormLogin = async ({valid}) => {
   if (!valid) return;
 
   try {
@@ -74,24 +74,27 @@ const onFormLogin = async ({ valid }) => {
 };
 
 // ===== РЕГИСТРАЦИЯ =====
-const onFormRegister = async ({ valid }) => {
+const onFormRegister = async ({valid}) => {
   if (!valid) return;
 
   try {
-    await api.register({
-      username: email.value,
+    const response = await api.register({
+      username: userName.value,
       password: password.value,
+      email: email.value,
       role: userType.value === "athlete" ? "Athlete" : "Trainer",
     });
+
+    localStorage.setItem("access_token", response.accessToken);
 
     toast.add({
       severity: "success",
       summary: "Вы успешно зарегистрировались",
       life: 3000,
     });
-
+    goDashboard();
     // после регистрации сразу логиним
-    await onFormLogin({ valid: true });
+    await onFormLogin({valid: true});
   } catch (err) {
     console.error(err);
     toast.add({
@@ -143,8 +146,8 @@ const onFormRegister = async ({ valid }) => {
                       <InputGroupAddon>
                         <i class="pi pi-key"></i>
                       </InputGroupAddon>
-                      <Password name="password" v-model="password" placeholder="Пароль" :feedback="false" fluid />
-<!--                      <InputText v-model="password" type="text" placeholder="Пароль"/>-->
+                      <Password name="password" v-model="password" placeholder="Пароль" :feedback="false" fluid/>
+                      <!--                      <InputText v-model="password" type="text" placeholder="Пароль"/>-->
                     </InputGroup>
 
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
@@ -159,12 +162,12 @@ const onFormRegister = async ({ valid }) => {
             <TabPanel value="1">
               <div class="card flex justify-center">
                 <Form :resolver @submit="onFormRegister" class="flex flex-col gap-4 w-full sm:w-56">
-                  <FormField v-slot="$field" name="login" initialValue="" class="flex flex-col gap-1">
+                  <FormField v-slot="$field" name="userName" initialValue="" class="flex flex-col gap-1">
                     <InputGroup>
                       <InputGroupAddon>
                         <i class="pi pi-user-plus"></i>
                       </InputGroupAddon>
-                      <InputText v-model="login" type="text" placeholder="Полное имя"/>
+                      <InputText v-model="userName" type="text" placeholder="Полное имя"/>
                     </InputGroup>
 
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
@@ -187,7 +190,7 @@ const onFormRegister = async ({ valid }) => {
                       <InputGroupAddon>
                         <i class="pi pi-key"></i>
                       </InputGroupAddon>
-                      <Password name="password" v-model="password" placeholder="Пароль" :feedback="false" fluid />
+                      <Password name="password" v-model="password" placeholder="Пароль" :feedback="false" fluid/>
                     </InputGroup>
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
                       {{ $field.error?.message }}
@@ -203,7 +206,7 @@ const onFormRegister = async ({ valid }) => {
                       <label for="trainer">Тренер</label>
                     </div>
                   </div>
-                  <Button class="bt" type="submit" severity="primary" @click="goDashboard" label="Создать аккаунт"/>
+                  <Button class="bt" type="submit" severity="primary" label="Создать аккаунт"/>
                 </Form>
               </div>
             </TabPanel>

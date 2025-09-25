@@ -64,7 +64,7 @@ export const api = {
         return res.data; // { accessToken, refreshToken }
     },
 
-    register: async (data: { username: string; password: string; role: string }) => {
+    register: async (data: { username: string; password: string; email:string, role: string }) => {
         const res = await internalAxios.post("api/Account/register", data);
         return res.data; // { id, username, role }
     },
