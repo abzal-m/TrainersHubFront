@@ -54,6 +54,12 @@
     </section>
     <Card class="feature-card">
       <template #title>
+<!--        <Button class="w-full" @click="authToStrave">Войти в страва</Button>-->
+        <a href="https://www.strava.com/oauth/authorize?client_id=174332&response_type=code&redirect_uri=http://localhost:8080/AthleteDashboard/&approval_prompt=force&scope=read,activity:read_all">Redirect</a>
+      </template>
+    </Card>
+    <Card class="feature-card">
+      <template #title>
         <Button class="w-full" @click="exit">Выйти</Button>
       </template>
     </Card>
@@ -67,11 +73,16 @@ import {api} from "@/api";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
 import {clearAccessToken} from "@/utils/auth";
+import {onMounted} from "vue";
+
+
+
 const exit = async () => {
   await api.exit()
   clearAccessToken()
   router.push({ name: Routes.LandingPage});
 }
+
 
 </script>
 

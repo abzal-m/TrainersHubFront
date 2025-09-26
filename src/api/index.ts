@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import {clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 
 
@@ -55,6 +55,10 @@ export const createInternalAxios = () => {
 export const internalAxios = createInternalAxios();
 
 export const api = {
+    stravaAuth: async (authCode: string): Promise<AxiosResponse> => {
+        const result = await internalAxios.get(`api/StravaActivity/Authorize/?code=${authCode}`);
+        return result.data;
+    },
     getStravaActivity: async () => {
         const result = await internalAxios.get("api/StravaActivity/GetLastActivity");
         return result.data;
@@ -75,6 +79,10 @@ export const api = {
     exit: async () => {
         const res = await internalAxios.post("api/Account/logout");
         return res.data;
+    },
+    isConnectToStrava: async () => {
+        const res = await internalAxios.get("/api/StravaActivity/IsConnected");
+        return res.data as boolean;
     }
 
 };

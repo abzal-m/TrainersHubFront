@@ -16,14 +16,34 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import AthleteStatistics from "@/components/AthleteStatistics.vue";
+import {api} from "@/api";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
 const view = ref('Home');
+const code = ref('')
 
 const onDockItemClick = (item: string) => {
   view.value = item
   console.log(item)
 };
+
+onMounted(async () => {
+  const isConnected = await api.isConnectToStrava()
+  if (!isConnected) {
+    await authToStrava()
+  }
+
+})
+
+const authToStrava = async () => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+  code.value = params.get("code") ?? '';
+  await api.stravaAuth(code.value)
+  await router.replace({name: Routes.AthleteDashboard });
+}
 
 const items = ref([
   {
