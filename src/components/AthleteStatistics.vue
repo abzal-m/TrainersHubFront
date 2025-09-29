@@ -1,47 +1,32 @@
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-br from-indigo-400 to-purple-600 pb-6"
-  >
-    <div
-      class="sticky top-0 z-10 bg-white/10 backdrop-blur-md p-4 border-b border-white/20"
-    >
-      <h2 class="text-2xl font-bold text-white text-center">
-        Спортивная статистика
-      </h2>
-
-      <div
-        class="flex justify-center gap-2 mt-4 border-b-2 border-white/20 pb-1"
-      >
-        <button
-          @click="handleTabChange('all')"
-          :disabled="isUpdating"
-          :class="getTabClass('all')"
-        >
-          🌍 Все
-        </button>
-        <button
-          @click="handleTabChange('ride')"
-          :disabled="isUpdating"
-          :class="getTabClass('ride')"
-        >
-          🚴 Велозаезды ({{ rideCount }})
-        </button>
-        <button
-          @click="handleTabChange('run')"
-          :disabled="isUpdating"
-          :class="getTabClass('run')"
-        >
-          🏃 Пробежки ({{ runCount }})
-        </button>
+  <div class="min-h-screen bg-gradient-to-br from-indigo-400 to-purple-600 pb-6">
+    <div class="sticky top-0 z-10 bg-gradient-to-r from-indigo-600/95 to-purple-600/95 shadow-lg">
+      <div class=" py-4">
+        <h2 class="text-2xl font-bold text-white text-center tracking-wide">
+          Спортивная статистика
+        </h2>
+        <div class="mt-4 flex justify-center">
+          <div class="bg-white/10 backdrop-blur-md rounded-full p-1 flex gap-1">
+            <button v-for="(label, type) in {
+              all: '🌍 Все',
+              ride: `🚴 Велозаезды (${rideCount})`,
+              run: `🏃 Пробежки (${runCount})`,
+            }" :key="type" @click="handleTabChange(type)" :disabled="isUpdating" :class="[
+              'px-3 py-2 rounded-full text-sm font-medium transition-all duration-200',
+              activeTab === type
+                ? 'bg-white text-indigo-600 shadow-sm'
+                : 'text-white/90 hover:bg-white/10',
+            ]">
+              {{ label }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="p-4 grid grid-cols-3 gap-3">
-      <Card
-        v-for="(metric, idx) in metrics"
-        :key="idx"
-        class="flex items-center justify-center shadow-md rounded-xl animate-slideUp text-center"
-      >
+      <Card v-for="(metric, idx) in metrics" :key="idx"
+        class="flex items-center justify-center shadow-md rounded-xl animate-slideUp text-center">
         <template #content>
           <div class="text-3xl">{{ metric.icon }}</div>
           <p class="text-xl font-bold text-gray-700">
@@ -59,9 +44,7 @@
       <!-- Replace chart v-for with static cards -->
       <Card class="rounded-xl shadow-lg">
         <template #title>
-          <div
-            class="flex items-center gap-2 font-semibold text-gray-800 text-lg"
-          >
+          <div class="flex items-center gap-2 font-semibold text-gray-800 text-lg">
             📊 Дистанция по активностям
           </div>
         </template>
@@ -74,9 +57,7 @@
 
       <Card class="rounded-xl shadow-lg">
         <template #title>
-          <div
-            class="flex items-center gap-2 font-semibold text-gray-800 text-lg"
-          >
+          <div class="flex items-center gap-2 font-semibold text-gray-800 text-lg">
             💨 Средняя скорость / Темп
           </div>
         </template>
@@ -89,9 +70,7 @@
 
       <Card class="rounded-xl shadow-lg">
         <template #title>
-          <div
-            class="flex items-center gap-2 font-semibold text-gray-800 text-lg"
-          >
+          <div class="flex items-center gap-2 font-semibold text-gray-800 text-lg">
             📈 Набор высоты
           </div>
         </template>
@@ -104,9 +83,7 @@
 
       <Card class="rounded-xl shadow-lg">
         <template #title>
-          <div
-            class="flex items-center gap-2 font-semibold text-gray-800 text-lg"
-          >
+          <div class="flex items-center gap-2 font-semibold text-gray-800 text-lg">
             ❤️ Пульс (средний/макс)
           </div>
         </template>
@@ -119,18 +96,14 @@
 
       <Card v-if="activeTab !== 'all'" class="rounded-xl shadow-lg">
         <template #title>
-          <div
-            class="flex items-center gap-2 font-semibold text-gray-800 text-lg"
-          >
+          <div class="flex items-center gap-2 font-semibold text-gray-800 text-lg">
             📝 Сводка
           </div>
         </template>
         <template #content>
           <div class="space-y-3">
-            <div
-              v-if="activeTab === 'ride' || activeTab === 'all'"
-              class="p-4 rounded-lg bg-blue-50 border border-blue-200"
-            >
+            <div v-if="activeTab === 'ride' || activeTab === 'all'"
+              class="p-4 rounded-lg bg-blue-50 border border-blue-200">
               <div class="flex items-center gap-2 mb-3">
                 🚴 <span class="font-semibold text-gray-800">Велозаезды</span>
               </div>
@@ -150,10 +123,8 @@
               </div>
             </div>
 
-            <div
-              v-if="activeTab === 'run' || activeTab === 'all'"
-              class="p-4 rounded-lg bg-red-50 border border-red-200"
-            >
+            <div v-if="activeTab === 'run' || activeTab === 'all'"
+              class="p-4 rounded-lg bg-red-50 border border-red-200">
               <div class="flex items-center gap-2 mb-3">
                 🏃 <span class="font-semibold text-gray-800">Пробежки</span>
               </div>
@@ -654,18 +625,24 @@ const getTabClass = (tabName: ActivityType) => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .animate-slideUp {
   animation: slideUp 0.5s ease-out both;
+}
+
+/* Remove any existing button styles */
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: none;
 }
 </style>
