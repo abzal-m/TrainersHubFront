@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AppBottomBar: typeof import('./src/components/AppBottomBar.vue')['default']
     AppConfig: typeof import('./src/components/AppConfig.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     AthleteProfile: typeof import('./src/components/AthleteProfile.vue')['default']

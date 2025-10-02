@@ -1,14 +1,14 @@
 <template>
 
-  <AppHeader v-if="view=='Calendar'"/>
-  <AthleteProfile v-if="view=='Profile'"/>
-  <AthleteStatistics v-if="view=='Statistics'"/>
-  <Dock :model="items" :position="position" :pt="{
-        listContainer: { class: 'bg-zinc text-zinc-contrast' },
-
-        item: 'px-2',
-        itemlink: 'w-5rem h-3rem'
-      }">
+  <AppHeader v-if="view == 'Calendar'" />
+  <AthleteProfile v-if="view == 'Profile'" />
+  <AthleteStatistics v-if="view == 'Statistics'" />
+  <Dock :model="items" :position="position" style="position: fixed;" :pt="{
+    root: { class: 'bg-zinc text-zinc-contrast' },
+    listContainer: { class: 'bg-zinc text-zinc-contrast' },
+    item: 'px-2 py-2',
+    itemlink: 'w-5rem h-3rem'
+  }">
     <template #itemicon="{ item }">
       <i :class="item.icon" style="font-size: 2rem" @click="onDockItemClick(item?.label)"></i>
     </template>
@@ -16,11 +16,11 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import AthleteStatistics from "@/components/AthleteStatistics.vue";
-import {api} from "@/api";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
+import { api } from "@/api";
+import { router } from "@/main";
+import { Routes } from "@/model/router";
 const view = ref('Home');
 const code = ref('')
 
@@ -42,7 +42,7 @@ const authToStrava = async () => {
   const params = new URLSearchParams(url.search);
   code.value = params.get("code") ?? '';
   await api.stravaAuth(code.value)
-  await router.replace({name: Routes.AthleteDashboard });
+  await router.replace({ name: Routes.AthleteDashboard });
 }
 
 const items = ref([
@@ -72,6 +72,4 @@ const position = ref('bottom');
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

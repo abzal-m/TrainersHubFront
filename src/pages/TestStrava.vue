@@ -1,42 +1,48 @@
 <template>
-  <div class="layout-container">
-    <div class="p-4">
-      <!-- Пока данные загружаются -->
-      <div v-if="!data">Загружаю данные...</div>
-
-      <!-- Когда данные загружены -->
-      <div v-else>
-        <h2>Список активностей Strava</h2>
-        <ul>
-          <li
-              v-for="activity in data"
-              :key="activity.id"
-              class=""
-          >
-            <div class="">
-              {{ activity.sport_type }} Дистанция: {{ activity.distance }} м
-            </div>
-          </li>
-        </ul>
-      </div>
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-md z-50">
+    <div class="flex justify-around items-center">
+      <Button
+          icon="pi pi-home"
+          label="Главная"
+          text
+          @click="$emit('navigate', 'home')"
+          class="flex-1 !rounded-none py-3"
+      />
+      <Button
+          icon="pi pi-chart-line"
+          label="Календарь"
+          text
+          @click="$emit('navigate', 'stats')"
+          class="flex-1 !rounded-none py-3"
+      />
+      <Button
+          icon="pi pi-plus-circle"
+          label="Статистика"
+          text
+          @click="$emit('navigate', 'add')"
+          class="flex-1 !rounded-none py-3"
+      />
+      <Button
+          icon="pi pi-user"
+          label="Профиль"
+          text
+          @click="$emit('navigate', 'profile')"
+          class="flex-1 !rounded-none py-3"
+      />
     </div>
-    <Button>Test</Button>
-
   </div>
-
-
 </template>
-<script setup lang="ts">
-import {ref, onMounted} from "vue";
-import {api} from "@/api";
 
-const data = ref();
-onMounted(async () => {
-  data.value = await api.getStravaActivity();
-  console.log(data.value, "resStrava");
-});
+<script setup>
+import Button from 'primevue/button'
 </script>
 
 <style scoped>
-
+/* Кнопки без скруглений и равной ширины */
+.p-button {
+  flex-direction: column; /* иконка сверху, текст снизу */
+}
+.p-button-label {
+  font-size: 0.75rem; /* меньше текста */
+}
 </style>
