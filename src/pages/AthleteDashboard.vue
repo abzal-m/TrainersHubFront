@@ -1,6 +1,6 @@
 <template>
 
-  <AppHeader v-if="view == 'Calendar'" />
+  <Month v-if="view == 'Calendar'" />
   <AthleteProfile v-if="view == 'Profile'" />
   <AthleteStatistics v-if="view == 'Statistics'" />
   <Dock :model="items" :position="position" style="position: fixed;" :pt="{

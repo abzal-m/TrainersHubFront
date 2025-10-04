@@ -13,6 +13,7 @@
         </Button>
         <Button @click="login" icon="pi pi-sign-in" type="button" class="topbar-theme-button"/>
       </div>
+
     </template>
   </Menubar>
 </template>

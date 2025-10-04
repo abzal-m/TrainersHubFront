@@ -354,7 +354,7 @@ const updateCharts = async () => {
   }
 };
 
-const debouncedUpdate = debounce(updateCharts, 250);
+const debouncedUpdate = debounce(updateCharts, 500);
 
 // watch activities and tab
 watch([() => activeTab.value, () => activities.value.length], () => {
@@ -393,7 +393,7 @@ onBeforeUnmount(() => {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.animate-slideUp { animation: slideUp 0.45s ease-out both; }
+.animate-slideUp { animation: slideUp 0.25s ease-out both; }
 button { -webkit-tap-highlight-color: transparent; }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
