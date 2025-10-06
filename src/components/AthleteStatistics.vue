@@ -137,6 +137,7 @@ import { Chart, registerables, ChartConfiguration } from 'chart.js';
 import Card from 'primevue/card';
 import { api } from '@/api';
 import type { Activity } from '@/model/types';
+import {dateFormatter} from "@/utils/dayFormatter";
 
 Chart.register(...registerables);
 
@@ -278,7 +279,7 @@ const updateCharts = async () => {
     charts.value.distance = createChart(distanceChart.value, {
       type: 'bar',
       data: {
-        labels: data.map((a, i) => `${a.sport_type === 'Ride' ? '🚴' : '🏃'} ${i + 1}`),
+        labels: data.map((a, i) => `${a.sport_type === 'Ride' ? '🚴' : '🏃'} ${dateFormatter(a.start_date_local)}`),
         datasets: [{
           data: data.map(a => +(a.distance / 1000).toFixed(2)),
           borderRadius: 6,

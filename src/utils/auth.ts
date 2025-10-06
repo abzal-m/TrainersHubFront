@@ -1,5 +1,7 @@
 import { api } from "@/api";
 import { jwtDecode } from "jwt-decode";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
 
 interface JwtPayload {
     exp?: number;
@@ -19,21 +21,6 @@ export function getAccessToken(): string | null {
 export function clearAccessToken() {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
 }
-
-interface AuthResult {
-    isAuth: boolean;
-    user: any | null; // заменишь `any` на твою модель пользователя
-}
-
-export const checkAuth = async (): Promise<AuthResult> => {
-    try {
-        const res = await api.secure(); // GET api/Account/secure
-        console.log(res);
-        return { isAuth: true, user: res };
-    } catch {
-        return { isAuth: false, user: null };
-    }
-};
 
 export function isTokenValid(token: string | null): boolean {
     if (!token) return false;

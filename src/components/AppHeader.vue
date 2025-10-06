@@ -24,24 +24,14 @@ import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
 import {router} from "@/main";
 import {Routes} from "@/model/router";
-import {useLayout} from "@/composables/useLayout"
-import {checkAuth} from "@/utils/auth";
+import {useLayout} from '@/composables/useLayout'
+import {api} from "@/api";
 
 const {isDarkMode, toggleDarkMode} = useLayout();
 const sidebarVisible = ref(false);
 
-
-const toggleMenu = () => {
-  sidebarVisible.value = !sidebarVisible.value;
-};
 const login = async () => {
-
-  const isAuthorized = await checkAuth()
-  if (!isAuthorized.isAuth) {
-    router.push({name: Routes.AuthForm});
-  } else {
-    router.push({name: Routes.AthleteDashboard});
-  }
+  await api.checkAuth()
 }
 
 

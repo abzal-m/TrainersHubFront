@@ -7,4 +7,5 @@ export interface Activity {
     average_cadence: number;
     average_heartrate: number;
     max_heartrate: number;
+    start_date_local: string
 }

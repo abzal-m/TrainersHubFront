@@ -1,5 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
+import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
 
 
 
@@ -72,9 +74,14 @@ export const api = {
         const res = await internalAxios.post("api/Account/register", data);
         return res.data; // { id, username, role }
     },
-    secure: async () => {
-        const res = await internalAxios.get("api/Account/secure");
-        return res.data;
+    checkAuth: async () => {
+        const res = await internalAxios.get("api/Account/isAuthenticated");
+        if (res.status === 401) {
+            await router.push({name: Routes.AuthForm});
+        }
+        if (res.status === 200) {
+            await router.push({name: Routes.AthleteDashboard});
+        }
     },
     exit: async () => {
         const res = await internalAxios.post("api/Account/logout");
