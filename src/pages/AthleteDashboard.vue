@@ -1,5 +1,5 @@
 <template>
-
+<Home v-if="view == 'Home'"/>
   <Month v-if="view == 'Calendar'" />
   <AthleteProfile v-if="view == 'Profile'" />
   <AthleteStatistics v-if="view == 'Statistics'" />
@@ -21,6 +21,7 @@ import AthleteStatistics from "@/components/AthleteStatistics.vue";
 import { api } from "@/api";
 import { router } from "@/main";
 import { Routes } from "@/model/router";
+import Home from "@/components/Home.vue";
 const view = ref('Home');
 const code = ref('')
 

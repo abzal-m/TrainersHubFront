@@ -2,6 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
+import {Trainings} from "@/model/types";
 
 
 
@@ -90,6 +91,11 @@ export const api = {
     isConnectToStrava: async () => {
         const res = await internalAxios.get("/api/StravaActivity/IsConnected");
         return res.data as boolean;
+    },
+    getAthleteTrainings: async () => {
+        const res = await internalAxios.get("api/Athlete/Trainings");
+        return res.data as Trainings[]
     }
+
 
 };
