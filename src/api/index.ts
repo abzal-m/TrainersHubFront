@@ -81,6 +81,7 @@ export const api = {
             await router.push({name: Routes.AuthForm});
         }
         if (res.status === 200) {
+            sessionStorage.setItem('Name', res.data.name as string)
             await router.push({name: Routes.AthleteDashboard});
         }
     },
