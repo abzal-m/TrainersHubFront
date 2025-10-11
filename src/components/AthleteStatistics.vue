@@ -380,7 +380,7 @@ const updateCharts = async () => {
 const debouncedUpdate = debounce(updateCharts, 500);
 
 // watch activities and tab
-watch([() => activeTab.value, () => activities.value.length], () => {
+watch([() => activeTab.value, () => activities.value?.length], () => {
   debouncedUpdate();
 });
 
@@ -394,8 +394,10 @@ const loadActivities = async () => {
       activities.value = [];
     } else {
       activities.value = res;
-      console.log(res, 'loadActivities');
-      localStorage.setItem('activities', JSON.stringify(res));
+      const athleteId = res[0].athlete.id;
+      console.log(athleteId, 'athleteId');
+      sessionStorage.setItem('athleteId', athleteId);
+      sessionStorage.setItem('activities', JSON.stringify(res));
     }
   } catch (e) {
     console.error('Failed to load activities', e);
@@ -407,11 +409,11 @@ const loadActivities = async () => {
   }
 };
 
-onMounted(() => {
-  const activitiesFromStorage = JSON.parse(<string>localStorage.getItem('activities'))
+onMounted(async () => {
+  const activitiesFromStorage = JSON.parse(<string>sessionStorage.getItem('activities'))
   console.log(activitiesFromStorage, 'activitiesFromStorage')
-  if (activitiesFromStorage.length === 0) {
-    loadActivities();
+  if (!activitiesFromStorage || activitiesFromStorage?.length === 0) {
+    await loadActivities();
   }else {
     activities.value = activitiesFromStorage
   }

@@ -1,6 +1,7 @@
 import {string} from "zod";
 
 export interface Activity {
+    athlete: Athlete
     sport_type: string;
     distance: number; // meters
     moving_time: number; // seconds
@@ -23,4 +24,21 @@ type Segments = {
     targetCadence: string;
     durationMinutes: string;
     distanceKm: string;
+}
+
+type Athlete = {
+    id: string;
+}
+
+export type AllStats = {
+    allRunTotals: StatsModel
+    allRideTotals: StatsModel
+}
+export type StatsModel = {
+    count: number;
+    distance: number;
+    movingTime: number;
+    elapsedTime: number;
+    elevationGain: number;
+
 }

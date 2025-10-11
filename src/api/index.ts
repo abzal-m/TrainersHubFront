@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
-import {Trainings} from "@/model/types";
+import {Activity, AllStats, Trainings} from "@/model/types";
 
 
 
@@ -64,7 +64,11 @@ export const api = {
     },
     getStravaActivity: async () => {
         const result = await internalAxios.get("api/StravaActivity/GetLastActivity");
-        return result.data;
+        return result.data as Activity[];
+    },
+    getStravaStats: async (stravaId: string) => {
+        const result = await internalAxios.get(`api/StravaActivity/GetStravaStats/?stravaId=${stravaId}`);
+        return result.data as AllStats;
     },
     login: async (data: { username: string; password: string }) => {
         const res = await internalAxios.post("api/Account/login", data);
@@ -79,10 +83,12 @@ export const api = {
         const res = await internalAxios.get("api/Account/isAuthenticated");
         if (res.status === 401) {
             await router.push({name: Routes.AuthForm});
+            return
         }
         if (res.status === 200) {
             sessionStorage.setItem('Name', res.data.name as string)
             await router.push({name: Routes.AthleteDashboard});
+            return
         }
     },
     exit: async () => {
