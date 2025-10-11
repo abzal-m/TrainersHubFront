@@ -95,13 +95,12 @@ import {clearAccessToken} from "@/utils/auth";
 import {onMounted, ref} from "vue";
 import {AllStats} from "@/model/types";
 import {mToKm} from "@/utils/StatsConverter";
-
+const athleteId = sessionStorage.getItem('athleteId')
 const stats = ref<AllStats>();
 
-
 onMounted(async () => {
-  const athleteId = sessionStorage.getItem('athleteId')
   const statsFromJson = JSON.parse(<string>sessionStorage.getItem('athleteStats'))
+  console.log(athleteId, 'athleteId')
   if (athleteId == null) {
     return;
   }
@@ -116,6 +115,7 @@ const getAthleteStats = async (athleteId: string) => {
   try {
     const res = await api.getStravaStats(athleteId)
     if (res.allRunTotals !== null || res.allRideTotals !== null) {
+      stats.value = res
       sessionStorage.setItem('athleteStats', JSON.stringify(res));
     }
   } catch (error) {
