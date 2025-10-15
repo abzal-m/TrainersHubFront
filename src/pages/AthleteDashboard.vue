@@ -34,6 +34,16 @@ onMounted(async () => {
   const isConnected = await api.isConnectToStrava()
   if (!isConnected) {
     await authToStrava()
+  } else {
+    const res = await api.getStravaActivity();
+    if (!Array.isArray(res)) {
+      return
+    } else {
+      const athleteId = res[0].athlete.id;
+      console.log(athleteId, 'athleteId');
+      sessionStorage.setItem('athleteId', athleteId);
+      sessionStorage.setItem('activities', JSON.stringify(res));
+    }
   }
 
 })
@@ -43,7 +53,6 @@ const authToStrava = async () => {
   const params = new URLSearchParams(url.search);
   code.value = params.get("code") ?? '';
   await api.stravaAuth(code.value)
-  await router.replace({ name: Routes.AthleteDashboard });
 }
 
 const items = ref([

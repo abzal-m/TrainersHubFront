@@ -142,7 +142,7 @@ import {Chart, registerables, ChartConfiguration} from 'chart.js';
 import Card from 'primevue/card';
 import {api} from '@/api';
 import type {Activity} from '@/model/types';
-import {dateFormatter} from "@/utils/dayFormatter";
+import {dateFormatter} from "@/utils/formatters";
 
 Chart.register(...registerables);
 
@@ -174,7 +174,6 @@ const changeTab = (tab: 'all' | 'ride' | 'run') => {
 
 // computed stats and tabs
 const filteredActivities = computed(() => {
-  console.log()
   if (activeTab.value === 'ride') return activities.value.filter(a => a.sport_type.toLowerCase() === 'ride' || a.sport_type.toLowerCase() === 'virtualride');
   if (activeTab.value === 'run') return activities.value.filter(a => a.sport_type.toLowerCase() === 'run');
   return activities.value;

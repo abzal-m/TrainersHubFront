@@ -16,14 +16,21 @@ export type Trainings = {
     trainingId: string;
     title: string;
     trainerName: string;
-    segments: Segments[];
+    trainingDay: string;
+    segments: Segment[];
 }
-type Segments = {
-    order: string;
-    targetHeartRate: string;
-    targetCadence: string;
-    durationMinutes: string;
-    distanceKm: string;
+
+export type AllTrainings = {
+    todayTraining: Trainings;
+    futureTraining: Trainings[];
+}
+
+export type Segment = {
+    order: number;
+    targetHeartRate: number;
+    targetCadence: number;
+    durationMinutes: number;
+    distanceKm: number;
 }
 
 type Athlete = {
