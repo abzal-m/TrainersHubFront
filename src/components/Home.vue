@@ -12,7 +12,7 @@
 
     <main class="max-w-4xl mx-auto space-y-3">
       <!-- Today's workout -->
-      <Card v-if="todayTrainings" class="border border-gray-100">
+      <Card v-if="todayTrainings && todayTrainings.title !== ''" class="border border-gray-100">
         <template #content>
           <div class="p-2">
             <div class="flex gap-6">
@@ -38,8 +38,13 @@
                     <div class="text-lg font-semibold mt-1">{{ formatTime(todayTrainings.trainingDay) }}</div>
                   </div>
                 </div>
+                <div class="grid grid-cols-2 gap-6 mb-3">
+                  <Button @click="openDialog(todayTrainings, 'bottom')" label="Детали" icon="pi pi-caret-right"
+                          class="w-5 p-button-primary text-white shadow-sm"/>
+                  <Button @click="openPosition('bottom')" label="Загрузить" icon="pi pi-upload"
+                          class="w-5 p-button-success text-white shadow-sm"/>
+                </div>
 
-                <Button label="Детали" icon="pi pi-caret-right" class="w-full p-button-primary text-white shadow-sm"/>
               </div>
             </div>
           </div>
@@ -54,7 +59,7 @@
             <div class="divide-y divide-gray-100">
               <div v-for="tr in futureTrainings" :key="tr.trainingId"
                    class="flex items-center gap-4 hover:bg-gray-50 transition-all cursor-pointer group">
-                <div class="flex-1 mb-4">
+                <div class="flex-1 mb-4" @click.native="openDialog(tr, 'left')">
                   <div class="font-semibold text-gray-900">{{ tr.title }}</div>
                   <div class="text-sm text-gray-500 mt-1">
                     {{ formatDateShort(tr.trainingDay) }} • {{ formatTotalDuration(tr.segments) }}
@@ -62,6 +67,7 @@
                 </div>
 
                 <i class="pi pi-chevron-right text-gray-300 group-hover:text-indigo-600 transition-colors"></i>
+
               </div>
 
               <div v-if="!futureTrainings.length" class="p-6 text-center text-gray-500">
@@ -72,6 +78,7 @@
         </template>
       </Card>
     </main>
+    <CustomDialog v-model="visible" :training="modalTrainings" :position="position"/>
   </div>
 </template>
 
@@ -82,12 +89,26 @@ import Button from 'primevue/button';
 import {api} from "@/api";
 import type {Segment, Trainings} from "@/model/types";
 import {formatDateShort, formatTime, formatTotalDistance, formatTotalDuration} from "@/utils/formatters";
+import CustomDialog from './tiny/CustomDialog.vue';
 
 const name = sessionStorage.getItem("Name") || 'Athlete';
+const position = ref('center');
+const visible = ref(false);
+
+const openPosition = (pos: string) => {
+  position.value = pos;
+  visible.value = true;
+}
 const todayTrainings = ref<Trainings>();
+const modalTrainings = ref<Trainings>();
 const futureTrainings = ref<Trainings[]>([]);
 const today = new Date();
+
 const localeDateString = today.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
+const openDialog = (train: Trainings, position: string) => {
+  modalTrainings.value = train;
+  openPosition(position)
+}
 
 const getTrainings = async () => {
   try {

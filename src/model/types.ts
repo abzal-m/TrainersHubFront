@@ -15,6 +15,7 @@ export interface Activity {
 export type Trainings = {
     trainingId: string;
     title: string;
+    description: string;
     trainerName: string;
     trainingDay: string;
     segments: Segment[];
