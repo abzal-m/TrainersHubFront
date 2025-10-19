@@ -2,6 +2,7 @@ import {string} from "zod";
 
 export interface Activity {
     athlete: Athlete
+    name: string
     sport_type: string;
     distance: number; // meters
     moving_time: number; // seconds
@@ -12,6 +13,16 @@ export interface Activity {
     max_heartrate: number;
     start_date_local: string
 }
+
+export type UplaodActivity = {
+    trainingId: number;
+    title: string;
+    durationMinutes: number;
+    elevationGain: number;
+    avgHeartRate: number;
+    avgCadence: number;
+}
+
 export type Trainings = {
     trainingId: string;
     title: string;

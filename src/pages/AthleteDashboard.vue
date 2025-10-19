@@ -40,7 +40,6 @@ onMounted(async () => {
       return
     } else {
       const athleteId = res[0].athlete.id;
-      console.log(athleteId, 'athleteId');
       sessionStorage.setItem('athleteId', athleteId);
       sessionStorage.setItem('activities', JSON.stringify(res));
     }

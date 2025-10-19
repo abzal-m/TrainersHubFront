@@ -13,6 +13,7 @@ import "tailwindcss";
 import App from "@/App.vue";
 import { definePreset } from '@primeuix/themes';
 import {getAccessToken, isTokenValid} from "@/utils/auth";
+import {ConfirmationService} from "primevue";
 
 export const router = createRouter({
     routes: defineRoutes,
@@ -93,4 +94,5 @@ app.use(PrimeVue, {
     }
 });
 app.use(ToastService);
+app.use(ConfirmationService)
 app.mount("#app");

@@ -19,6 +19,7 @@ declare module 'vue' {
     Calendar: typeof import('primevue/calendar')['default']
     Card: typeof import('primevue/card')['default']
     Column: typeof import('primevue/column')['default']
+    ConfirmDialog: typeof import('primevue/confirmdialog')['default']
     CustomDialog: typeof import('./src/components/tiny/CustomDialog.vue')['default']
     DataTable: typeof import('primevue/datatable')['default']
     Dialog: typeof import('primevue/dialog')['default']
@@ -35,9 +36,11 @@ declare module 'vue' {
     Month: typeof import('./src/components/Month.vue')['default']
     Panel: typeof import('primevue/panel')['default']
     Password: typeof import('primevue/password')['default']
+    Popover: typeof import('primevue/popover')['default']
     RadioButton: typeof import('primevue/radiobutton')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select: typeof import('primevue/select')['default']
     Sidebar: typeof import('primevue/sidebar')['default']
     SportsActivityDashboard: typeof import('./src/components/SportsActivityDashboard.vue')['default']
     Tab: typeof import('primevue/tab')['default']
@@ -46,6 +49,7 @@ declare module 'vue' {
     TabPanels: typeof import('primevue/tabpanels')['default']
     Tabs: typeof import('primevue/tabs')['default']
     Toast: typeof import('primevue/toast')['default']
+    UploadDialog: typeof import('./src/components/tiny/UploadDialog.vue')['default']
   }
   export interface GlobalDirectives {
     StyleClass: typeof import('primevue/styleclass')['default']

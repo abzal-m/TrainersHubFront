@@ -39,10 +39,13 @@
                   </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-3">
+                  <p class="font-semibold text-green-600">Тренировка загружена</p>
                   <Button @click="openDialog(todayTrainings, 'bottom')" label="Детали" icon="pi pi-caret-right"
                           class="w-5 p-button-primary text-white shadow-sm"/>
-                  <Button @click="openPosition('bottom')" label="Загрузить" icon="pi pi-upload"
+
+                  <Button v-if="disableUploadButton" @click="showUploadDialogButton(todayTrainings, 'center')" label="Загрузить" icon="pi pi-upload"
                           class="w-5 p-button-success text-white shadow-sm"/>
+
                 </div>
 
               </div>
@@ -79,6 +82,7 @@
       </Card>
     </main>
     <CustomDialog v-model="visible" :training="modalTrainings" :position="position"/>
+    <UploadDialog v-model="showUploadDialog" :training="modalTrainings" :position="position" :trainingId="modalTrainings?.trainingId" :activities="activities" @close="modelValue"/>
   </div>
 </template>
 
@@ -87,28 +91,56 @@ import {ref, onMounted} from 'vue';
 import Card from "primevue/card";
 import Button from 'primevue/button';
 import {api} from "@/api";
-import type {Segment, Trainings} from "@/model/types";
+import type {Activity, Segment, Trainings} from "@/model/types";
 import {formatDateShort, formatTime, formatTotalDistance, formatTotalDuration} from "@/utils/formatters";
 import CustomDialog from './tiny/CustomDialog.vue';
 
 const name = sessionStorage.getItem("Name") || 'Athlete';
+
 const position = ref('center');
 const visible = ref(false);
+const showUploadDialog = ref(false);
+const disableUploadButton = ref(true);
 
-const openPosition = (pos: string) => {
-  position.value = pos;
-  visible.value = true;
-}
+const activities = ref<Activity[]>([])
+
+
 const todayTrainings = ref<Trainings>();
 const modalTrainings = ref<Trainings>();
 const futureTrainings = ref<Trainings[]>([]);
 const today = new Date();
 
+onMounted(() => {
+  const disableUpdButton = JSON.parse(<string>sessionStorage.getItem("disableUploadButton"))
+  if (disableUpdButton !== null) {
+    console.log(disableUpdButton, 'disableUpdButton');
+    disableUploadButton.value = disableUpdButton ?? true;
+  }
+
+})
+
 const localeDateString = today.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
-const openDialog = (train: Trainings, position: string) => {
+const openDialog = (train: Trainings, pos: string) => {
   modalTrainings.value = train;
-  openPosition(position)
+  position.value = pos;
+  visible.value = true;
 }
+const showUploadDialogButton = (train: Trainings, pos: string) => {
+  modalTrainings.value = train;
+  position.value = pos;
+  showUploadDialog.value = true;
+  const activityFromStorage = JSON.parse(<string>sessionStorage.getItem("activities"))
+  activities.value = activityFromStorage.slice(0, 5)
+
+}
+const modelValue = (res: boolean) => {
+  if (res){
+    showUploadDialog.value = false
+    disableUploadButton.value = false
+    sessionStorage.setItem("disableUploadButton", JSON.stringify(false))
+  }
+}
+
 
 const getTrainings = async () => {
   try {

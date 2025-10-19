@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
-import {Activity, AllStats, AllTrainings, Trainings} from "@/model/types";
+import {Activity, AllStats, AllTrainings, Trainings, UplaodActivity} from "@/model/types";
 
 
 
@@ -96,12 +96,16 @@ export const api = {
         return res.data;
     },
     isConnectToStrava: async () => {
-        const res = await internalAxios.get("/api/StravaActivity/IsConnected");
+        const res = await internalAxios.get("/api/StravaActivity/IsConnectedToStrave");
         return res.data as boolean;
     },
     getAthleteTrainings: async () => {
         const res = await internalAxios.get("api/Athlete/Trainings");
         return res.data as AllTrainings
+    },
+    uploadActivity: async (data: UplaodActivity) => {
+        const res = await internalAxios.post("api/Athlete/UploadResult", data);
+        return res.data
     }
 
 
