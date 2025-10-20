@@ -1,8 +1,8 @@
 <template>
 <Home v-if="view == 'Home'"/>
-  <Month v-if="view == 'Calendar'" />
-  <AthleteProfile v-if="view == 'Profile'" />
-  <AthleteStatistics v-if="view == 'Statistics'" />
+  <Calendar v-if="view == 'Calendar'" />
+  <Profile v-if="view == 'Profile'" />
+  <Statistics v-if="view == 'Statistics'" />
   <Dock :model="items" :position="position" style="position: fixed;" :pt="{
     root: { class: 'bg-zinc text-zinc-contrast' },
     listContainer: { class: 'bg-zinc text-zinc-contrast' },
@@ -17,11 +17,11 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import AthleteStatistics from "@/components/AthleteStatistics.vue";
+import Statistics from "@/components/BottomBar/Statistics.vue";
 import { api } from "@/api";
 import { router } from "@/main";
 import { Routes } from "@/model/router";
-import Home from "@/components/Home.vue";
+import Home from "@/components/BottomBar/Home.vue";
 const view = ref('Home');
 const code = ref('')
 

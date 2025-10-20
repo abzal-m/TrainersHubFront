@@ -7,10 +7,6 @@
     </template>
     <template #end>
       <div class="md:hidden">
-
-        <Button type="button" class="topbar-theme-button" @click="toggleDarkMode" text rounded>
-          <i :class="['pi ', 'pi ', { 'pi-moon': isDarkMode, 'pi-sun': !isDarkMode }]"/>
-        </Button>
         <Button @click="login" icon="pi pi-sign-in" type="button" class="topbar-theme-button"/>
       </div>
 

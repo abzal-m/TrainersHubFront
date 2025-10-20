@@ -27,40 +27,81 @@
               :class="isSelected(day.date) ? 'bg-blue-500 text-white' : ''" @click="selectDate(day.date)">
               {{ day.date.getDate() }}
             </div>
-            <!-- события -->
-            <div v-for="event in getCardsForDate(day.date)" :key="event.id"
-              class="truncate text-xs rounded px-1 py-0.5 mt-1 cursor-pointer" :class="event.color">
-              {{ event.title }}
+            <div v-for="event in getCardsForDate(day.date)" :key="event.trainingId"
+              class="truncate text-xs rounded px-1 py-0.5 mt-1 cursor-pointer h-2rem" :class="event.isDone ? 'bg-green-500' : 'bg-red-500'">
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <canvas class="mb-8" ref="chart"></canvas>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import {ref, computed, onMounted} from "vue";
+import {api} from "@/api";
+import {ShortTrainings} from "@/model/types";
+import { Chart } from 'chart.js/auto'
+import {ArcElement, Legend, Tooltip} from "chart.js";
+Chart.register(ArcElement, Tooltip, Legend)
+
+const chart = ref<HTMLCanvasElement | null>(null)
 
 const today = new Date();
 const selectedDate = ref(today);
 const currentMonth = ref(today.getMonth());
 const currentYear = ref(today.getFullYear());
-
-// события
-const events = ref([
-  { id: 1, date: new Date(2025, 9, 1), title: "MR", color: "bg-red-500 text-white" },
-  { id: 2, date: new Date(2025, 9, 2), title: "HIIT", color: "bg-red-400 text-white" },
-  { id: 3, date: new Date(2025, 9, 3), title: "Str", color: "bg-blue-400 text-white" },
-  { id: 4, date: new Date(2025, 9, 5), title: "LR", color: "bg-red-500 text-white" },
-  { id: 5, date: new Date(2025, 9, 6), title: "Rec", color: "bg-green-500 text-white" },
-]);
+const events = ref<ShortTrainings[]>([]);
 
 const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const monthNames = [
   "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
   "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
 ];
+
+onMounted( async () => {
+  events.value = await api.getAthleteShortTrainings();
+  const done = events.value.filter(t => t.isDone).length
+  const notDone = events.value.filter(t => !t.isDone).length
+  const total = done + notDone
+  const donePct = ((done / total) * 100).toFixed(1)
+  const notDonePct = ((notDone / total) * 100).toFixed(1)
+
+  new Chart(chart.value!, {
+    type: 'doughnut',
+    data: {
+      labels: [
+        `Выполнено (${donePct}%)`,
+        `Не выполнено (${notDonePct}%)`
+      ],
+      datasets: [{
+        data: [done, notDone],
+        backgroundColor: ['#22c55e', '#ef4444']
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Статистика тренировок'
+        },
+        legend: {
+          position: 'top'
+        },
+        datalabels: {
+          color: '#fff',
+          font: { weight: 'bold' },
+          formatter: (value: number, ctx) => {
+            const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0) ?? 1
+            const percentage = ((value / total) * 100).toFixed(1)
+            return `${percentage}%`
+          }
+        }
+      }
+    }
+  })
+})
 
 const monthName = computed(() => monthNames[currentMonth.value]);
 
@@ -109,12 +150,11 @@ const weeks = computed(() => {
 });
 
 // события на день
-const getCardsForDate = (date) => {
-  return events.value.filter(
-    (e) =>
-      e.date.getDate() === date.getDate() &&
-      e.date.getMonth() === date.getMonth() &&
-      e.date.getFullYear() === date.getFullYear()
+const getCardsForDate = (date: Date) => {
+  return events.value.filter((e) =>
+      new Date(e.trainingDay).getDate() === date.getDate() &&
+      new Date(e.trainingDay).getMonth() === date.getMonth() &&
+      new Date(e.trainingDay).getFullYear() === date.getFullYear()
   );
 };
 
@@ -161,7 +201,5 @@ const nextMonth = () => {
 </script>
 
 <style scoped>
-td {
-  vertical-align: top;
-}
+
 </style>

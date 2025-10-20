@@ -1,6 +1,6 @@
 <template>
   <div class="layout-container">
-    <Card class="feature-card">
+    <Card v-if="stats" class="feature-card">
       <template #title>
         <div class="flex flex-column justify-content-center items-center gap-4 mb-2">
           <span>Общая статистика заездов</span>
@@ -21,7 +21,7 @@
         </div>
       </template>
     </Card>
-    <Card class="feature-card">
+    <Card v-if="stats" class="feature-card">
       <template #title>
         <div class="flex flex-column justify-content-center items-center gap-4 mb-2">
           <span>Общая статистика забегов</span>
@@ -42,6 +42,10 @@
         </div>
       </template>
     </Card>
+    <div v-else class="flex justify-content-center items-center h-10rem">
+      <i class="pi pi-spin pi-spinner text-3xl"></i>
+      <span class="ml-3">Загрузка статистики...</span>
+    </div>
     <section class="flex flex-row gap-2 mb-5">
       <Card>
         <template #title>
@@ -74,7 +78,7 @@
     <Card class="feature-card">
       <template #title>
         <!--        <Button class="w-full" @click="authToStrave">Войти в страва</Button>-->
-        <a href="https://www.strava.com/oauth/authorize?client_id=174332&response_type=code&redirect_uri=http://localhost:8080/AthleteDashboard/&approval_prompt=force&scope=read,activity:read_all">Redirect</a>
+        <a href="https://www.strava.com/oauth/authorize?client_id=174332&response_type=code&redirect_uri=http://localhost:8080/AthleteDashboard/&approval_prompt=force&scope=read,activity:read_all">Войти в Strava</a>
       </template>
     </Card>
     <Card class="feature-card">
@@ -94,34 +98,34 @@ import {Routes} from "@/model/router";
 import {clearAccessToken} from "@/utils/auth";
 import {onMounted, ref} from "vue";
 import {AllStats} from "@/model/types";
-import {mToKm} from "@/utils/StatsConverter";
+import {mToKm} from "@/utils/statsConverter";
 const athleteId = sessionStorage.getItem('athleteId')
 const stats = ref<AllStats>();
 
+const CACHE_TTL = 1000 * 60 * 10; // 10 минут
+
 onMounted(async () => {
-  const statsFromJson = JSON.parse(<string>sessionStorage.getItem('athleteStats'))
-  console.log(athleteId, 'athleteId')
-  if (athleteId == null) {
-    return;
+  const cached = sessionStorage.getItem('athleteStats');
+  if (cached) {
+    const { data, timestamp } = JSON.parse(cached);
+    if (Date.now() - timestamp < CACHE_TTL) {
+      stats.value = data;
+      return;
+    }
   }
-  if (!statsFromJson) {
-    await getAthleteStats(athleteId)
-  } else {
-    stats.value = statsFromJson
-  }
-})
+  await getAthleteStats(athleteId!);
+});
 
 const getAthleteStats = async (athleteId: string) => {
-  try {
-    const res = await api.getStravaStats(athleteId)
-    if (res.allRunTotals !== null || res.allRideTotals !== null) {
-      stats.value = res
-      sessionStorage.setItem('athleteStats', JSON.stringify(res));
-    }
-  } catch (error) {
-    console.log(error);
+  const res = await api.getStravaStats(athleteId);
+  if (res) {
+    stats.value = res;
+    sessionStorage.setItem(
+        'athleteStats',
+        JSON.stringify({ data: res, timestamp: Date.now() })
+    );
   }
-}
+};
 
 const exit = async () => {
   await api.exit()

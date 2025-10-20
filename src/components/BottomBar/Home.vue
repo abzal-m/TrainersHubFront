@@ -39,11 +39,11 @@
                   </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 mb-3">
-                  <p class="font-semibold text-green-600">Тренировка загружена</p>
+                  <p v-if="todayTrainings.isDone" class="font-semibold text-green-600">Тренировка загружена</p>
                   <Button @click="openDialog(todayTrainings, 'bottom')" label="Детали" icon="pi pi-caret-right"
                           class="w-5 p-button-primary text-white shadow-sm"/>
 
-                  <Button v-if="disableUploadButton" @click="showUploadDialogButton(todayTrainings, 'center')" label="Загрузить" icon="pi pi-upload"
+                  <Button v-if="!todayTrainings.isDone" @click="showUploadDialogButton(todayTrainings, 'center')" label="Загрузить" icon="pi pi-upload"
                           class="w-5 p-button-success text-white shadow-sm"/>
 
                 </div>
@@ -82,7 +82,7 @@
       </Card>
     </main>
     <CustomDialog v-model="visible" :training="modalTrainings" :position="position"/>
-    <UploadDialog v-model="showUploadDialog" :training="modalTrainings" :position="position" :trainingId="modalTrainings?.trainingId" :activities="activities" @close="modelValue"/>
+    <UploadDialog v-model="showUploadDialog" :training="modalTrainings" :position="position" :trainingId="modalTrainings?.trainingId ?? 0" :activities="activities" @close="modelValue"/>
   </div>
 </template>
 
@@ -93,7 +93,7 @@ import Button from 'primevue/button';
 import {api} from "@/api";
 import type {Activity, Segment, Trainings} from "@/model/types";
 import {formatDateShort, formatTime, formatTotalDistance, formatTotalDuration} from "@/utils/formatters";
-import CustomDialog from './tiny/CustomDialog.vue';
+import CustomDialog from '../tiny/CustomDialog.vue';
 
 const name = sessionStorage.getItem("Name") || 'Athlete';
 
@@ -111,13 +111,8 @@ const futureTrainings = ref<Trainings[]>([]);
 const today = new Date();
 
 onMounted(() => {
-  const disableUpdButton = JSON.parse(<string>sessionStorage.getItem("disableUploadButton"))
-  if (disableUpdButton !== null) {
-    console.log(disableUpdButton, 'disableUpdButton');
-    disableUploadButton.value = disableUpdButton ?? true;
-  }
-
-})
+  getTrainings();
+});
 
 const localeDateString = today.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
 const openDialog = (train: Trainings, pos: string) => {
@@ -137,7 +132,6 @@ const modelValue = (res: boolean) => {
   if (res){
     showUploadDialog.value = false
     disableUploadButton.value = false
-    sessionStorage.setItem("disableUploadButton", JSON.stringify(false))
   }
 }
 
@@ -152,9 +146,7 @@ const getTrainings = async () => {
     console.error(e);
   }
 };
-onMounted(() => {
-  getTrainings();
-});
+
 
 
 </script>

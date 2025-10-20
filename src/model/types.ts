@@ -24,12 +24,19 @@ export type UplaodActivity = {
 }
 
 export type Trainings = {
-    trainingId: string;
+    trainingId: number;
     title: string;
+    isDone: boolean;
     description: string;
     trainerName: string;
     trainingDay: string;
     segments: Segment[];
+}
+export type ShortTrainings = {
+    trainingId: number;
+    title: string;
+    isDone: boolean;
+    trainingDay: Date;
 }
 
 export type AllTrainings = {

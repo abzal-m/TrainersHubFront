@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
-import {Activity, AllStats, AllTrainings, Trainings, UplaodActivity} from "@/model/types";
+import {Activity, AllStats, AllTrainings, ShortTrainings, Trainings, UplaodActivity} from "@/model/types";
 
 
 
@@ -106,7 +106,11 @@ export const api = {
     uploadActivity: async (data: UplaodActivity) => {
         const res = await internalAxios.post("api/Athlete/UploadResult", data);
         return res.data
-    }
+    },
+    getAthleteShortTrainings: async () => {
+        const res = await internalAxios.get("api/Athlete/ShortTrainingsForCalendar");
+        return res.data as ShortTrainings[]
+    },
 
 
 };
