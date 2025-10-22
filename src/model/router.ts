@@ -4,12 +4,13 @@ import Index from "@/pages/Index.vue";
 import TestStrava from "@/pages/TestStrava.vue";
 import AuthForm from "@/pages/AuthForm.vue";
 import AthleteDashboard from "@/pages/AthleteDashboard.vue";
-import {getAccessToken, isTokenValid} from "@/utils/auth";
+import CouchPage from "@/pages/CouchPage.vue";
 
 export const defineRoutes: RouteRecordRaw[] = [
     { path: "/", name: "Index", component: Index },
     { path: "/LandingPage", name: "LandingPage", component: LandingPage },
     { path: "/AuthForm", name: "AuthForm", component: AuthForm },
+    {path: "/CouchPage", name: "CouchPage", component: CouchPage },
     {
         path: "/AthleteDashboard",
         name: "AthleteDashboard",
@@ -30,4 +31,5 @@ export enum Routes {
     AuthForm = "AuthForm",
     AthleteDashboard = "AthleteDashboard",
     TestStrava = "TestStrava",
+    CouchPage = "CouchPage",
 }

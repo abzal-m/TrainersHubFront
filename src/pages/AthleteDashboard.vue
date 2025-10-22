@@ -17,11 +17,11 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import Statistics from "@/components/BottomBar/Statistics.vue";
+import Statistics from "@/components/Athlete/Statistics.vue";
 import { api } from "@/api";
 import { router } from "@/main";
 import { Routes } from "@/model/router";
-import Home from "@/components/BottomBar/Home.vue";
+import Home from "@/components/Athlete/Home.vue";
 const view = ref('Home');
 const code = ref('')
 

@@ -94,6 +94,7 @@ import {api} from "@/api";
 import type {Activity, Segment, Trainings} from "@/model/types";
 import {formatDateShort, formatTime, formatTotalDistance, formatTotalDuration} from "@/utils/formatters";
 import CustomDialog from '../tiny/CustomDialog.vue';
+import {localeDateString} from "@/utils/formatters"
 
 const name = sessionStorage.getItem("Name") || 'Athlete';
 
@@ -108,13 +109,11 @@ const activities = ref<Activity[]>([])
 const todayTrainings = ref<Trainings>();
 const modalTrainings = ref<Trainings>();
 const futureTrainings = ref<Trainings[]>([]);
-const today = new Date();
 
 onMounted(() => {
   getTrainings();
 });
 
-const localeDateString = today.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
 const openDialog = (train: Trainings, pos: string) => {
   modalTrainings.value = train;
   position.value = pos;

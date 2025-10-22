@@ -1,113 +1,3 @@
-<script setup lang="ts">
-import {computed, ref} from "vue";
-import Card from "primevue/card";
-import Button from "primevue/button";
-import {zodResolver} from "@primevue/forms/resolvers/zod";
-import {z} from "zod";
-import {useToast} from "primevue/usetoast";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
-import {api} from "@/api/index";
-
-const activeTab = ref(0);
-const email = ref("");
-const password = ref("");
-const userName = ref("");
-const userType = ref("athlete");
-
-const toast = useToast();
-
-const changeActiveTab = (tab: number) => {
-  if (tab !== activeTab.value) {
-    activeTab.value = tab;
-    email.value = "";
-    password.value = "";
-    userName.value = "";
-  }
-};
-
-const goDashboard = () => {
-  if (userType.value === "athlete") {
-    router.push({name: Routes.AthleteDashboard});
-  }
-  if (userType.value === "trainer") {
-    router.push({name: Routes.LandingPage});
-  }
-};
-
-const resolver = zodResolver(
-    z.object({
-      email: z.string().min(1, {message: "Введите почту"}),
-      password: z.string().min(1, {message: "Введите пароль"}),
-      userName: z.string().min(1, {message: "Введите ваше полное имя"}),
-    })
-);
-
-// ===== ЛОГИН =====
-const onFormLogin = async ({valid}) => {
-  if (!valid) return;
-
-  try {
-    const response = await api.login({
-      username: email.value,
-      password: password.value,
-    });
-
-    localStorage.setItem("access_token", response.accessToken);
-
-    toast.add({
-      severity: "success",
-      summary: "Вы вошли в систему",
-      life: 3000,
-    });
-
-    goDashboard();
-  } catch (err) {
-    console.error(err);
-    toast.add({
-      severity: "error",
-      summary: "Ошибка входа",
-      detail: "Неверный логин или пароль",
-      life: 3000,
-    });
-  }
-};
-
-// ===== РЕГИСТРАЦИЯ =====
-const onFormRegister = async ({valid}) => {
-  if (!valid) return;
-
-  try {
-    const response = await api.register({
-      username: userName.value,
-      password: password.value,
-      email: email.value,
-      role: userType.value === "athlete" ? "Athlete" : "Trainer",
-    });
-
-    localStorage.setItem("access_token", response.accessToken);
-
-    toast.add({
-      severity: "success",
-      summary: "Вы успешно зарегистрировались",
-      life: 3000,
-    });
-    goDashboard();
-    // после регистрации сразу логиним
-    await onFormLogin({valid: true});
-  } catch (err) {
-    console.error(err);
-    toast.add({
-      severity: "error",
-      summary: "Ошибка регистрации",
-      detail: "Попробуйте снова",
-      life: 3000,
-    });
-  }
-};
-</script>
-
-
 <template>
   <div class="layout-container">
     <div class="flex flex-col items-center justify-center w-full p-2">
@@ -216,7 +106,114 @@ const onFormRegister = async ({valid}) => {
     </Card>
   </div>
 </template>
+<script setup lang="ts">
+import {computed, ref} from "vue";
+import Card from "primevue/card";
+import Button from "primevue/button";
+import {zodResolver} from "@primevue/forms/resolvers/zod";
+import {z} from "zod";
+import {useToast} from "primevue/usetoast";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
+import {api} from "@/api/index";
 
+const activeTab = ref(0);
+const email = ref("");
+const password = ref("");
+const userName = ref("");
+const userType = ref("athlete");
+
+const toast = useToast();
+
+const changeActiveTab = (tab: number) => {
+  if (tab !== activeTab.value) {
+    activeTab.value = tab;
+    email.value = "";
+    password.value = "";
+    userName.value = "";
+  }
+};
+
+const goDashboard = () => {
+  if (userType.value === "athlete") {
+    router.push({name: Routes.AthleteDashboard});
+  }
+  if (userType.value === "trainer") {
+    router.push({name: Routes.LandingPage});
+  }
+};
+
+const resolver = zodResolver(
+    z.object({
+      email: z.string().min(1, {message: "Введите почту"}),
+      password: z.string().min(1, {message: "Введите пароль"}),
+      userName: z.string().min(1, {message: "Введите ваше полное имя"}),
+    })
+);
+
+// ===== ЛОГИН =====
+const onFormLogin = async ({valid}) => {
+  if (!valid) return;
+
+  try {
+    const response = await api.login({
+      username: email.value,
+      password: password.value,
+    });
+
+    localStorage.setItem("access_token", response.accessToken);
+
+    toast.add({
+      severity: "success",
+      summary: "Вы вошли в систему",
+      life: 3000,
+    });
+
+    goDashboard();
+  } catch (err) {
+    console.error(err);
+    toast.add({
+      severity: "error",
+      summary: "Ошибка входа",
+      detail: "Неверный логин или пароль",
+      life: 3000,
+    });
+  }
+};
+
+// ===== РЕГИСТРАЦИЯ =====
+const onFormRegister = async ({valid}) => {
+  if (!valid) return;
+
+  try {
+    const response = await api.register({
+      username: userName.value,
+      password: password.value,
+      email: email.value,
+      role: userType.value === "athlete" ? "Athlete" : "Trainer",
+    });
+
+    localStorage.setItem("access_token", response.accessToken);
+
+    toast.add({
+      severity: "success",
+      summary: "Вы успешно зарегистрировались",
+      life: 3000,
+    });
+    goDashboard();
+    // после регистрации сразу логиним
+    await onFormLogin({valid: true});
+  } catch (err) {
+    console.error(err);
+    toast.add({
+      severity: "error",
+      summary: "Ошибка регистрации",
+      detail: "Попробуйте снова",
+      life: 3000,
+    });
+  }
+};
+</script>
 <style scoped>
 
 </style>

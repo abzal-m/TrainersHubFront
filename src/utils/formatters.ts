@@ -7,7 +7,7 @@ export const dateFormatter = (dateString: string) => {
     const year = String(dateObject.getUTCFullYear()).slice(-2); // get last 2 digits
     return `${day}.${month}.${year}`;
 }
-// форматтеры
+
 export const formatTotalDistance = (segments: Segment[] = []) => {
     const dist = segments.reduce((s, seg) => s + (seg.distanceKm || 0), 0);
     return Math.round(dist * 10) / 10;
@@ -22,7 +22,7 @@ export const formatDateShort = (d?: string) => {
     if (!d) return '';
     return new Date(d).toLocaleString('ru-RU', {day: 'numeric', month: 'short'});
 };
-// Add new formatter for time only
+
 export const formatTime = (d?: string) => {
     if (!d) return '';
     return new Date(d).toLocaleTimeString('ru-RU', {
@@ -30,3 +30,6 @@ export const formatTime = (d?: string) => {
         minute: '2-digit'
     });
 };
+
+const today = new Date();
+export const localeDateString = today.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
