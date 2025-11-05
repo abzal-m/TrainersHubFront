@@ -134,12 +134,12 @@ const changeActiveTab = (tab: number) => {
   }
 };
 
-const goDashboard = () => {
-  if (userType.value === "athlete") {
+const goDashboard = (role: 'Athlete' | 'Trainer') => {
+  if (role === "Athlete") {
     router.push({name: Routes.AthleteDashboard});
   }
-  if (userType.value === "trainer") {
-    router.push({name: Routes.LandingPage});
+  if (role === "Trainer") {
+    router.push({name: Routes.CouchPage});
   }
 };
 
@@ -169,7 +169,7 @@ const onFormLogin = async ({valid}) => {
       life: 3000,
     });
 
-    goDashboard();
+    goDashboard(response.role);
   } catch (err) {
     console.error(err);
     toast.add({

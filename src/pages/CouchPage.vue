@@ -8,7 +8,7 @@
           <p class="text-sm text-gray-500 mt-1">{{ localeDateString }}</p>
         </div>
         <div>
-          <Button class="text-sm" label="Secondary" severity="secondary">Выход</Button>
+          <Button class="text-sm" label="Secondary" severity="secondary" @click="exit">Выход</Button>
         </div>
       </div>
     </div>
@@ -21,13 +21,10 @@
         </TabList>
         <TabPanels>
           <TabPanel value="0">
-            <p class="m-0">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+            <Main :athletes="myAthletes"/>
           </TabPanel>
           <TabPanel value="1">
-            <Athletes/>
+            <Athletes :athletes="myAthletes"/>
           </TabPanel>
           <TabPanel value="2">
             <p class="m-0">
@@ -44,9 +41,22 @@
 <script setup lang="ts">
 import Athletes from "@/components/Couch/Athletes.vue";
 import {localeDateString} from "@/utils/formatters"
+import {api} from "@/api/index"
+import {onMounted, ref} from "vue";
+import {MyAthlete} from "@/model/types";
+import {clearAccessToken} from "@/utils/auth";
+import {router} from "@/main";
+import {Routes} from "@/model/router";
+const myAthletes = ref<MyAthlete[]>([])
 
-
-
+onMounted(async () => {
+  myAthletes.value = await api.getMyAthletes()
+})
+const exit = async () => {
+  await api.exit()
+  clearAccessToken()
+  await router.push({name: Routes.LandingPage});
+}
 
 </script>
 

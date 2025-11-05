@@ -31,5 +31,11 @@ export const formatTime = (d?: string) => {
     });
 };
 
+export const formatSeconds = (sec: number) => {
+    const hours = Math.floor(sec / 3600);
+    const mins = sec % 60;
+    return hours ? `${hours} ч ${mins} мин` : `${mins} мин`;
+};
+
 const today = new Date();
 export const localeDateString = today.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});

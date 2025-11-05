@@ -29,6 +29,7 @@ export type Trainings = {
     isDone: boolean;
     description: string;
     trainerName: string;
+    athleteName: string;
     trainingDay: string;
     segments: Segment[];
 }
@@ -55,6 +56,11 @@ export type Segment = {
 type Athlete = {
     id: string;
 }
+export type MyAthlete = {
+    id: string;
+    username: string;
+    email: string;
+}
 
 export type AllStats = {
     allRunTotals: StatsModel
@@ -66,5 +72,13 @@ export type StatsModel = {
     movingTime: number;
     elapsedTime: number;
     elevationGain: number;
-
+}
+export type AllTrainingResults = {
+    username: string;
+    title: string;
+    durationMinutes: number;
+    elevationGain: number;
+    avgHeartRate: number;
+    avgCadence: number;
+    createdAt: string;
 }

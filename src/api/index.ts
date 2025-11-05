@@ -2,7 +2,16 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
-import {Activity, AllStats, AllTrainings, ShortTrainings, Trainings, UplaodActivity} from "@/model/types";
+import {
+    Activity,
+    AllStats,
+    AllTrainingResults,
+    AllTrainings,
+    MyAthlete,
+    ShortTrainings,
+    Trainings,
+    UplaodActivity
+} from "@/model/types";
 
 
 
@@ -87,7 +96,12 @@ export const api = {
         }
         if (res.status === 200) {
             sessionStorage.setItem('Name', res.data.name as string)
-            await router.push({name: Routes.AthleteDashboard});
+            if (res.data.role == 'Athlete') {
+                await router.push({name: Routes.AthleteDashboard});
+            } else if (res.data.role == 'Trainer') {
+                await router.push({name: Routes.CouchPage});
+            }
+
             return
         }
     },
@@ -110,6 +124,20 @@ export const api = {
     getAthleteShortTrainings: async () => {
         const res = await internalAxios.get("api/Athlete/ShortTrainingsForCalendar");
         return res.data as ShortTrainings[]
+    },
+
+
+    getMyAthletes: async () => {
+        const res = await internalAxios.get("api/Trainer/MyAthletes");
+        return res.data as MyAthlete[]
+    },
+    getAllAthleteTrainings: async () => {
+        const res = await internalAxios.get("api/Trainer/GetAllAthleteTrainings");
+        return res.data as Trainings[]
+    },
+    getMyAthletesResults: async () => {
+        const res = await internalAxios.get("api/Trainer/MyAthletesResults");
+        return res.data as AllTrainingResults[]
     },
 
 
