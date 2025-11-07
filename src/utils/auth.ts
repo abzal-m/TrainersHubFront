@@ -1,7 +1,4 @@
-import { api } from "@/api";
 import { jwtDecode } from "jwt-decode";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
 
 interface JwtPayload {
     exp?: number;

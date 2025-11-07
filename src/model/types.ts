@@ -74,6 +74,7 @@ export type StatsModel = {
     elevationGain: number;
 }
 export type AllTrainingResults = {
+    trainingId: number;
     username: string;
     title: string;
     durationMinutes: number;

@@ -65,17 +65,23 @@
       <template #title>Последние активности</template>
       <template #content>
         <div v-for="results in allTrainingResults">
-          <Card>
-            <template #title>{{ results.username }}</template>
+          <Card class="hover:shadow-lg transition-shadow duration-300 cursor-pointer" @click="openTrainingsResults(results.trainingId)">
             <template #content>
-              <div>
-                {{ formatDateShort(results.createdAt) }} {{formatTime(results.createdAt)}}
-              </div>
-              <div>
-                {{formatSeconds(results.durationMinutes)}}
+              <div class="flex items-center justify-between p-2">
+                <div class="flex flex-col gap-1">
+                  <h3 class="font-semibold text-gray-900 text-base">{{ results.username }}</h3>
+                  <p class="text-sm text-gray-600">{{ results.title }}</p>
+                  <p class="text-xs text-gray-400">
+                    {{ formatDateShort(results.createdAt) }} • {{ formatTime(results.createdAt) }}
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-2 text-gray-500">
+                  <span class="text-sm font-medium">{{ formatSeconds(results.durationMinutes) }}</span>
+                  <i class="pi pi-chevron-right text-gray-300"></i>
+                </div>
               </div>
             </template>
-
           </Card>
         </div>
       </template>
@@ -83,6 +89,7 @@
     </Card>
   </div>
   <CustomDialog v-model="visible" :training="modalTrainings" :position="position"/>
+  <TrainingResultsDialog v-model="visibleResults" :trainingResults="trainingResults" :position="'center'"/>
 </template>
 
 <script setup lang="ts">
@@ -102,11 +109,18 @@ const allTrainings = ref<Trainings[]>([])
 const allTrainingResults = ref<AllTrainingResults[]>([])
 const position = ref('center');
 const visible = ref(false);
+const visibleResults = ref(false)
 const modalTrainings = ref<Trainings>();
+const trainingResults = ref<AllTrainingResults>();
 const openDialog = (train: Trainings, pos: string) => {
   modalTrainings.value = train;
   position.value = pos;
   visible.value = true;
+}
+const openTrainingsResults = (trainingId: number) => {
+  console.log('click')
+  trainingResults.value = allTrainingResults.value.find((x) => x.trainingId === trainingId)
+  visibleResults.value = true;
 }
 watchEffect(() => {
   athletes.value = props.athletes

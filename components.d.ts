@@ -38,6 +38,7 @@ declare module 'vue' {
     Popover: typeof import('primevue/popover')['default']
     Profile: typeof import('./src/components/Athlete/Profile.vue')['default']
     RadioButton: typeof import('primevue/radiobutton')['default']
+    Rating: typeof import('primevue/rating')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']
@@ -49,7 +50,9 @@ declare module 'vue' {
     TabPanel: typeof import('primevue/tabpanel')['default']
     TabPanels: typeof import('primevue/tabpanels')['default']
     Tabs: typeof import('primevue/tabs')['default']
+    Textarea: typeof import('primevue/textarea')['default']
     Toast: typeof import('primevue/toast')['default']
+    TrainingResultsDialog: typeof import('./src/components/tiny/TrainingResultsDialog.vue')['default']
     UploadDialog: typeof import('./src/components/tiny/UploadDialog.vue')['default']
   }
   export interface GlobalDirectives {
