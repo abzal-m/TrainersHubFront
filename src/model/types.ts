@@ -84,5 +84,8 @@ export type AllTrainingResults = {
     elevationGain: number;
     avgHeartRate: number;
     avgCadence: number;
+    rpe: number;
+    wellbeing: string;
+    athleteNotion: string;
     createdAt: string;
 }

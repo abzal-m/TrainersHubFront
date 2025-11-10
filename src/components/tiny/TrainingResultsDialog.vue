@@ -89,7 +89,7 @@
 
 <script setup lang="ts">
 import Dialog from 'primevue/dialog';
-import {formatDateShort, formatSeconds, formatTime} from "@/utils/formatters";
+import {dateFormatter, formatDateShort, formatSeconds, formatTime, localeDateString} from "@/utils/formatters";
 import {computed, ref} from "vue";
 
 defineEmits<{
@@ -106,6 +106,9 @@ const props = defineProps<{
     elevationGain?: number,
     title?: string,
     username?: string,
+    rpe?: number,
+    wellbeing?: string,
+    athleteNotion: string
     createdAt?: string
   }
 }>()
@@ -114,10 +117,10 @@ const rating = ref(0)
 const comments = ref('')
 
 const basics = computed(() => [
-  {label: 'Время', value: `48 мин`},
-  {label: 'RPE', value: '8/10'},
-  {label: 'Самочувствие', value: `Хорошо`},
-  {label: 'Калории', value: `520 ккал`},
+  {label: 'Время', value:`${dateFormatter(props.trainingResults?.createdAt) ?? 0} `},
+  {label: 'RPE', value: `${props.trainingResults?.rpe ?? 0} `},
+  {label: 'Самочувствие', value: `${props.trainingResults?.wellbeing ?? 0} `},
+  {label: 'Калории', value: `нет данных`},
 ])
 
 const metrics = computed(() => [

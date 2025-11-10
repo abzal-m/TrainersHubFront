@@ -143,8 +143,13 @@ const emit = defineEmits<{
 const selectedActivity = ref<Activity | null>(null)
 const athleteNotion = ref('')
 const rpe = ref(0)
-const wellbeing = ref<string | null>(null)
+const wellbeing = ref<Wellbeing>()
 const isSubmitting = ref(false)
+
+type Wellbeing = {
+  label: string,
+  value: string
+}
 
 const wellbeingOptions = [
   { label: 'Отлично', value: 'excellent' },
@@ -234,7 +239,7 @@ const uploadResult = async () => {
     durationMinutes: Math.floor(selectedActivity.value?.moving_time ?? 0),
     // Новые поля
     rpe: rpe.value,
-    wellbeing: wellbeing.value ?? "",
+    wellbeing: wellbeing.value?.value ?? "",
     athleteNotion: athleteNotion.value
   }
 
