@@ -24,6 +24,7 @@ declare module 'vue' {
     Dialog: typeof import('primevue/dialog')['default']
     Divider: typeof import('primevue/divider')['default']
     Dock: typeof import('primevue/dock')['default']
+    Dropdown: typeof import('primevue/dropdown')['default']
     Form: typeof import('@primevue/forms/form')['default']
     FormField: typeof import('@primevue/forms/formfield')['default']
     Home: typeof import('./src/components/Athlete/Home.vue')['default']
