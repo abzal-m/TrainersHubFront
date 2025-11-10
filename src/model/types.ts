@@ -21,6 +21,9 @@ export type UplaodActivity = {
     elevationGain: number;
     avgHeartRate: number;
     avgCadence: number;
+    rpe: number;
+    wellbeing: string;
+    athleteNotion: string;
 }
 
 export type Trainings = {

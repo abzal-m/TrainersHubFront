@@ -1,6 +1,6 @@
 <template>
-  <Toast/>
-  <ConfirmDialog/>
+  <Toast />
+  <ConfirmDialog />
 
   <Dialog
       :visible="modelValue"
@@ -11,7 +11,8 @@
       :position="position"
       :draggable="false"
   >
-    <div class="space-y-4">
+    <form @submit.prevent="confirmSave" class="space-y-4">
+      <!-- Заголовок -->
       <div>
         <div class="text-md text-gray-700 font-semibold">
           {{ training?.title }}
@@ -21,8 +22,9 @@
         </div>
       </div>
 
+      <!-- Последние тренировки -->
       <div class="flex flex-col gap-3">
-        <p>Последние тренировки</p>
+        <p class="font-medium text-gray-700">Последние тренировки</p>
         <div
             v-for="activity in activities"
             :key="activity.name"
@@ -34,19 +36,35 @@
               name="activity"
               :value="activity"
           />
-
           <label :for="activity.name" class="cursor-pointer">
             {{ dateFormatter(activity.start_date_local) }} |
             {{ activity.name }} – {{ activity.distance }} м
           </label>
         </div>
+        <p v-if="errors.activity" class="text-red-500 text-sm mt-1">
+          {{ errors.activity }}
+        </p>
       </div>
+
+      <!-- Поля ввода -->
       <div class="flex flex-col gap-4">
+        <!-- RPE -->
         <div class="flex flex-col gap-2">
           <label class="font-medium text-gray-700">RPE (восприятие нагрузки)</label>
-          <Rating v-model="rpe" :stars="10" cancel="false" />
+          <div
+              :class="[
+              'rounded-md border p-2 transition',
+              errors.rpe ? 'border-red-500 ring-1 ring-red-400' : 'border-gray-300'
+            ]"
+          >
+            <Rating v-model="rpe" :stars="10" cancel="false" />
+          </div>
+          <p v-if="errors.rpe" class="text-red-500 text-sm mt-1">
+            {{ errors.rpe }}
+          </p>
         </div>
 
+        <!-- Самочувствие -->
         <div class="flex flex-col gap-2">
           <label class="font-medium text-gray-700">Самочувствие</label>
           <Dropdown
@@ -55,9 +73,14 @@
               optionLabel="label"
               placeholder="Выберите состояние"
               class="w-full"
+              :class="{ 'p-invalid': errors.wellbeing }"
           />
+          <p v-if="errors.wellbeing" class="text-red-500 text-sm mt-1">
+            {{ errors.wellbeing }}
+          </p>
         </div>
 
+        <!-- Заметки -->
         <div class="flex flex-col gap-2">
           <label class="font-medium text-gray-700">Заметки атлета</label>
           <Textarea
@@ -70,29 +93,33 @@
         </div>
       </div>
 
+      <!-- Кнопка -->
       <Button
+          type="submit"
           label="Сохранить"
           class="w-full"
-          @click="confirmSave"
-          :disabled="!selectedActivity"
+          :disabled="isSubmitting"
       />
-    </div>
+    </form>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import { ref } from 'vue'
 import Dialog from 'primevue/dialog'
 import RadioButton from 'primevue/radiobutton'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
 import ConfirmDialog from 'primevue/confirmdialog'
-import {useConfirm} from 'primevue/useconfirm'
-import {useToast} from 'primevue/usetoast'
+import { useConfirm } from 'primevue/useconfirm'
+import { useToast } from 'primevue/usetoast'
+import Dropdown from 'primevue/dropdown'
+import Textarea from 'primevue/textarea'
+import Rating from 'primevue/rating'
 
-import {Activity, Trainings, UplaodActivity} from '@/model/types'
-import {dateFormatter} from '@/utils/formatters'
-import {api} from "@/api";
+import { Activity, Trainings, UplaodActivity } from '@/model/types'
+import { dateFormatter } from '@/utils/formatters'
+import { api } from '@/api'
 
 /**
  * Props
@@ -112,21 +139,13 @@ const emit = defineEmits<{
   (e: 'close', value: boolean): void
 }>()
 
-
+// refs
 const selectedActivity = ref<Activity | null>(null)
-const activityToUpload = ref<UplaodActivity>({
-  title: '',
-  avgCadence: 0,
-  avgHeartRate: 0,
-  trainingId: 0,
-  elevationGain: 0,
-  durationMinutes: 0
-})
-const confirm = useConfirm()
-const toast = useToast()
 const athleteNotion = ref('')
 const rpe = ref(0)
 const wellbeing = ref<string | null>(null)
+const isSubmitting = ref(false)
+
 const wellbeingOptions = [
   { label: 'Отлично', value: 'excellent' },
   { label: 'Хорошо', value: 'good' },
@@ -135,12 +154,48 @@ const wellbeingOptions = [
   { label: 'Очень плохо', value: 'very_bad' }
 ]
 
+// utils
+const confirm = useConfirm()
+const toast = useToast()
+
+// ошибки валидации
+const errors = ref({
+  activity: '',
+  rpe: '',
+  wellbeing: ''
+})
+
 /**
- * Confirm dialog
+ * Проверка формы
+ */
+const validateForm = () => {
+  errors.value = { activity: '', rpe: '', wellbeing: '' }
+  let valid = true
+
+  if (!selectedActivity.value) {
+    errors.value.activity = 'Выберите активность'
+    valid = false
+  }
+  if (!rpe.value || rpe.value === 0) {
+    errors.value.rpe = 'Укажите RPE'
+    valid = false
+  }
+  if (!wellbeing.value) {
+    errors.value.wellbeing = 'Выберите самочувствие'
+    valid = false
+  }
+
+  return valid
+}
+
+/**
+ * Подтверждение и сохранение
  */
 const confirmSave = () => {
+  if (!validateForm()) return
+
   confirm.require({
-    message: 'Вы уверены что хотите сохранить эту тренировку',
+    message: 'Вы уверены, что хотите сохранить эту тренировку?',
     header: 'Сохранение',
     icon: 'pi pi-exclamation-triangle',
     rejectProps: {
@@ -148,26 +203,53 @@ const confirmSave = () => {
       severity: 'secondary',
       outlined: true
     },
-    acceptProps: {
-      label: 'Да'
-    },
+    acceptProps: { label: 'Да' },
     accept: async () => {
       await uploadResult()
       emit('close', true)
-      toast.add({ severity: 'info', summary: 'Загрузка', detail: 'Загрузка прошла успешна', life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: 'Готово',
+        detail: 'Тренировка успешно сохранена',
+        life: 3000
+      })
     }
   })
 }
-const uploadResult = async () => {
-  console.log(selectedActivity.value, activityToUpload.value)
-  if (!selectedActivity.value) return
-  activityToUpload.value.title = props.training?.title ?? ''
-  activityToUpload.value.avgCadence =  Math.floor(selectedActivity.value?.average_cadence) ?? 0
-  activityToUpload.value.avgHeartRate = Math.floor(selectedActivity.value?.average_heartrate) ?? 0
-  activityToUpload.value.trainingId = props.trainingId
-  activityToUpload.value.elevationGain = Math.floor(selectedActivity.value?.total_elevation_gain) ?? 0
-  activityToUpload.value.durationMinutes = Math.floor(selectedActivity.value?.moving_time) ?? 0
 
-  await api.uploadActivity(activityToUpload.value)
+/**
+ * Отправка данных на сервер
+ */
+const uploadResult = async () => {
+  if (!selectedActivity.value) return
+
+  isSubmitting.value = true
+
+  const activityToUpload: UplaodActivity = {
+    title: props.training?.title ?? '',
+    avgCadence: Math.floor(selectedActivity.value?.average_cadence ?? 0),
+    avgHeartRate: Math.floor(selectedActivity.value?.average_heartrate ?? 0),
+    trainingId: props.trainingId,
+    elevationGain: Math.floor(selectedActivity.value?.total_elevation_gain ?? 0),
+    durationMinutes: Math.floor(selectedActivity.value?.moving_time ?? 0),
+    // Новые поля
+    rpe: rpe.value,
+    wellbeing: wellbeing.value ?? "",
+    athleteNotion: athleteNotion.value
+  }
+
+  try {
+    await api.uploadActivity(activityToUpload)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
+
+<style scoped>
+/* Для PrimeVue Dropdown */
+.p-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
+}
+</style>
