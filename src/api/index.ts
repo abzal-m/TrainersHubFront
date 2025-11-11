@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {checkAuth, clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
+import { clearAccessToken, getAccessToken, setAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
 import {

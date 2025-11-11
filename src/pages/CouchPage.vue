@@ -4,7 +4,7 @@
     <div class="mx-auto mb-2">
       <div class="flex items-center justify-between bg-white p-3 rounded-2xl shadow-sm">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">{{ 'Атлет' }}</h1>
+          <h1 class="text-2xl font-bold text-gray-900">{{ trainerName }}</h1>
           <p class="text-sm text-gray-500 mt-1">{{ localeDateString }}</p>
         </div>
         <div>
@@ -28,8 +28,12 @@
           </TabPanel>
           <TabPanel value="2">
             <p class="m-0">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa
-              qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
+              atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique
+              sunt in culpa
+              qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+              expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo
+              minus.
             </p>
           </TabPanel>
         </TabPanels>
@@ -47,7 +51,10 @@ import {MyAthlete} from "@/model/types";
 import {clearAccessToken} from "@/utils/auth";
 import {router} from "@/main";
 import {Routes} from "@/model/router";
+
 const myAthletes = ref<MyAthlete[]>([])
+const trainerName = ref('')
+trainerName.value = sessionStorage.getItem('Name') ?? 'Тренер'
 
 onMounted(async () => {
   myAthletes.value = await api.getMyAthletes()
