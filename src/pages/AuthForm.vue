@@ -25,7 +25,7 @@
                       <InputGroupAddon>
                         <i class="pi pi-at"></i>
                       </InputGroupAddon>
-                      <InputText v-model="email" type="text" placeholder="Почта"/>
+                      <InputText v-model="userName" type="text" placeholder="Почта"/>
                     </InputGroup>
                     <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
                       {{ $field.error?.message }}
@@ -157,7 +157,7 @@ const onFormLogin = async ({valid}) => {
 
   try {
     const response = await api.login({
-      username: email.value,
+      username: userName.value,
       password: password.value,
     });
 

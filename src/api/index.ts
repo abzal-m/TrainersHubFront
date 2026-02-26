@@ -68,15 +68,15 @@ export const internalAxios = createInternalAxios();
 
 export const api = {
     stravaAuth: async (authCode: string): Promise<AxiosResponse> => {
-        const result = await internalAxios.get(`api/StravaActivity/Authorize/?code=${authCode}`);
+        const result = await internalAxios.get(`api/strava/authorize/?code=${authCode}`);
         return result.data;
     },
     getStravaActivity: async () => {
-        const result = await internalAxios.get("api/StravaActivity/GetLastActivity");
+        const result = await internalAxios.get("api/strava/activities");
         return result.data as Activity[];
     },
     getStravaStats: async (stravaId: string) => {
-        const result = await internalAxios.get(`api/StravaActivity/GetStravaStats/?stravaId=${stravaId}`);
+        const result = await internalAxios.get(`api/strava/stats/?stravaId=${stravaId}`);
         return result.data as AllStats;
     },
     login: async (data: { username: string; password: string }) => {
@@ -89,29 +89,30 @@ export const api = {
         return res.data; // { id, username, role }
     },
     checkAuth: async () => {
-        const res = await internalAxios.get("api/Account/isAuthenticated");
-        if (res.status === 401) {
-            await router.push({name: Routes.AuthForm});
-            return
-        }
-        if (res.status === 200) {
-            sessionStorage.setItem('Name', res.data.name as string)
-            if (res.data.role == 'Athlete') {
-                await router.push({name: Routes.AthleteDashboard});
-            } else if (res.data.role == 'Trainer') {
-                await router.push({name: Routes.CouchPage});
-            }
-
-            return
-        }
+        await router.push({name: Routes.AuthForm});
+        //const res = await internalAxios.get("api/Account/isAuthenticated");
+        // if (res.status === 401) {
+        //     await router.push({name: Routes.AuthForm});
+        //     return
+        // }
+        // if (res.status === 200) {
+        //     sessionStorage.setItem('Name', res.data.name as string)
+        //     if (res.data.role == 'Athlete') {
+        //         await router.push({name: Routes.AthleteDashboard});
+        //     } else if (res.data.role == 'Trainer') {
+        //         await router.push({name: Routes.CouchPage});
+        //     }
+        //
+        //     return
+        // }
     },
     exit: async () => {
         const res = await internalAxios.post("api/Account/logout");
         return res.data;
     },
     isConnectToStrava: async () => {
-        const res = await internalAxios.get("/api/StravaActivity/IsConnectedToStrave");
-        return res.data as boolean;
+        const res = await internalAxios.get("/api/strava/connected");
+        return res.data;
     },
     getAthleteTrainings: async () => {
         const res = await internalAxios.get("api/Athlete/Trainings");

@@ -66,15 +66,15 @@ export type MyAthlete = {
 }
 
 export type AllStats = {
-    allRunTotals: StatsModel
-    allRideTotals: StatsModel
+    all_run_totals: StatsModel
+    all_ride_totals: StatsModel
 }
 export type StatsModel = {
     count: number;
     distance: number;
-    movingTime: number;
-    elapsedTime: number;
-    elevationGain: number;
+    moving_time: number;
+    elapsed_time: number;
+    elevation_gain: number;
 }
 export type AllTrainingResults = {
     trainingId: number;

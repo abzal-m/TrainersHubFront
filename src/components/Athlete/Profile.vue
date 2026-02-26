@@ -1,5 +1,6 @@
 <template>
   <div class="layout-container">
+
     <Card v-if="stats" class="feature-card">
       <template #title>
         <div class="flex flex-column justify-content-center items-center gap-4 mb-2">
@@ -7,15 +8,16 @@
         </div>
         <div class="flex flex-row justify-content-between gap-4 mb-2">
           <div class="flex flex-column justify-content-center items-center">
-            <span class="text-base">{{ stats?.allRideTotals.count }}</span>
+
+            <span class="text-base">{{ stats?.all_ride_totals.count }}</span>
             <span class="text-base">Тренировок</span>
           </div>
           <div class="flex flex-column justify-content-center items-center">
-            <span class="text-base">{{ mToKm(stats?.allRideTotals.distance) }} км</span>
+            <span class="text-base">{{ mToKm(stats?.all_ride_totals.distance) }} км</span>
             <span class="text-base">Дистанция</span>
           </div>
           <div class="flex flex-column justify-content-center items-center">
-            <span class="text-base">{{ stats?.allRideTotals.elevationGain }} м</span>
+            <span class="text-base">{{ stats?.all_ride_totals.elevation_gain }} м</span>
             <span class="text-base">Набор высоты</span>
           </div>
         </div>
@@ -28,15 +30,15 @@
         </div>
         <div class="flex flex-row justify-content-between gap-4 mb-2">
           <div class="flex flex-column justify-content-center items-center">
-            <span class="text-base">{{ stats?.allRunTotals.count }}</span>
+            <span class="text-base">{{ stats?.all_run_totals.count }}</span>
             <span class="text-base">Тренировок</span>
           </div>
           <div class="flex flex-column justify-content-center items-center">
-            <span class="text-base">{{ mToKm(stats?.allRunTotals.distance) }} км</span>
+            <span class="text-base">{{ mToKm(stats?.all_run_totals.distance) }} км</span>
             <span class="text-base">Дистанция</span>
           </div>
           <div class="flex flex-column justify-content-center items-center">
-            <span class="text-base">{{ stats?.allRunTotals.elevationGain }} м</span>
+            <span class="text-base">{{ stats?.all_run_totals.elevation_gain }} м</span>
             <span class="text-base">Набор высоты</span>
           </div>
         </div>
@@ -106,6 +108,7 @@ const CACHE_TTL = 1000 * 60 * 10; // 10 минут
 
 onMounted(async () => {
   const cached = sessionStorage.getItem('athleteStats');
+  console.log(cached);
   if (cached) {
     const { data, timestamp } = JSON.parse(cached);
     if (Date.now() - timestamp < CACHE_TTL) {
@@ -118,6 +121,7 @@ onMounted(async () => {
 
 const getAthleteStats = async (athleteId: string) => {
   const res = await api.getStravaStats(athleteId);
+  console.log(res.all_run_totals, 'res')
   if (res) {
     stats.value = res;
     sessionStorage.setItem(

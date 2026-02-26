@@ -31,8 +31,8 @@ const onDockItemClick = (item: string) => {
 };
 
 onMounted(async () => {
-  const isConnected = await api.isConnectToStrava()
-  if (!isConnected) {
+  const res = await api.isConnectToStrava()
+  if (!res.isConnected) {
     await authToStrava()
   } else {
     const res = await api.getStravaActivity();
