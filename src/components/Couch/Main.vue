@@ -93,46 +93,41 @@
 </template>
 
 <script setup lang="ts">
-
-import {AllTrainingResults, MyAthlete, Trainings} from "@/model/types";
-import {onMounted, ref, watchEffect} from 'vue';
-import {api} from "@/api";
-import {formatDateShort, formatSeconds, formatTime, formatTotalDuration} from "@/utils/formatters";
+import type { AllTrainingResults, MyAthlete, Trainings } from "@/model/types";
+import { onMounted, ref } from 'vue';
+import { api } from "@/api";
+import { formatDateShort, formatSeconds, formatTime } from "@/utils/formatters";
 import Card from "primevue/card";
 import CustomDialog from "@/components/tiny/CustomDialog.vue";
+import TrainingResultsDialog from "@/components/tiny/TrainingResultsDialog.vue";
 
-const props = defineProps(
-    ['athletes']
-)
-const athletes = ref<MyAthlete[]>([])
-const allTrainings = ref<Trainings[]>([])
-const allTrainingResults = ref<AllTrainingResults[]>([])
+defineProps<{ athletes: MyAthlete[] }>();
+
+const allTrainings = ref<Trainings[]>([]);
+const allTrainingResults = ref<AllTrainingResults[]>([]);
 const position = ref('center');
 const visible = ref(false);
-const visibleResults = ref(false)
+const visibleResults = ref(false);
 const modalTrainings = ref<Trainings>();
 const trainingResults = ref<AllTrainingResults>();
+
 const openDialog = (train: Trainings, pos: string) => {
   modalTrainings.value = train;
   position.value = pos;
   visible.value = true;
-}
-const openTrainingsResults = (trainingId: number) => {
-  console.log('click')
-  trainingResults.value = allTrainingResults.value.find((x) => x.trainingId === trainingId)
-  visibleResults.value = true;
-}
-watchEffect(() => {
-  athletes.value = props.athletes
-})
-onMounted(async () => {
-  allTrainings.value = await api.getAllAthleteTrainings()
-  allTrainingResults.value = await api.getMyAthletesResults()
-  console.log(allTrainingResults.value, 'value')
-})
+};
 
+const openTrainingsResults = (trainingId: number) => {
+  trainingResults.value = allTrainingResults.value.find(x => x.trainingId === trainingId);
+  visibleResults.value = true;
+};
+
+onMounted(async () => {
+  [allTrainings.value, allTrainingResults.value] = await Promise.all([
+    api.getAllAthleteTrainings(),
+    api.getMyAthletesResults(),
+  ]);
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -12,8 +12,8 @@
         <Toast/>
         <Tabs value='0' scrollable>
           <TabList>
-            <Tab class="w-6" @click="changeActiveTab(0)" value="0">Вход</Tab>
-            <Tab class="w-6" @click="changeActiveTab(1)" value="1">Регистрация</Tab>
+            <Tab class="w-6" value="0">Вход</Tab>
+            <Tab class="w-6" value="1">Регистрация</Tab>
           </TabList>
           <TabPanels>
             <TabPanel value="0" class="">
@@ -107,84 +107,48 @@
   </div>
 </template>
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import { ref } from "vue";
 import Card from "primevue/card";
 import Button from "primevue/button";
-import {zodResolver} from "@primevue/forms/resolvers/zod";
-import {z} from "zod";
-import {useToast} from "primevue/usetoast";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
-import {api} from "@/api/index";
+import { zodResolver } from "@primevue/forms/resolvers/zod";
+import { z } from "zod";
+import { useToast } from "primevue/usetoast";
+import { router } from "@/main";
+import { Routes } from "@/model/router";
+import { api } from "@/api/index";
 
-const activeTab = ref(0);
 const email = ref("");
 const password = ref("");
 const userName = ref("");
 const userType = ref("athlete");
-
 const toast = useToast();
 
-const changeActiveTab = (tab: number) => {
-  if (tab !== activeTab.value) {
-    activeTab.value = tab;
-    email.value = "";
-    password.value = "";
-    userName.value = "";
-  }
-};
-
 const goDashboard = (role: 'Athlete' | 'Trainer') => {
-  if (role === "Athlete") {
-    router.push({name: Routes.AthleteDashboard});
-  }
-  if (role === "Trainer") {
-    router.push({name: Routes.CouchPage});
-  }
+  router.push({ name: role === 'Athlete' ? Routes.AthleteDashboard : Routes.CouchPage });
 };
 
 const resolver = zodResolver(
-    z.object({
-      email: z.string().min(1, {message: "Введите почту"}),
-      password: z.string().min(1, {message: "Введите пароль"}),
-      userName: z.string().min(1, {message: "Введите ваше полное имя"}),
-    })
+  z.object({
+    email: z.string().min(1, { message: "Введите почту" }),
+    password: z.string().min(1, { message: "Введите пароль" }),
+    userName: z.string().min(1, { message: "Введите ваше полное имя" }),
+  })
 );
 
-// ===== ЛОГИН =====
-const onFormLogin = async ({valid}) => {
+const onFormLogin = async ({ valid }: { valid: boolean }) => {
   if (!valid) return;
-
   try {
-    const response = await api.login({
-      username: userName.value,
-      password: password.value,
-    });
-
+    const response = await api.login({ username: userName.value, password: password.value });
     localStorage.setItem("access_token", response.accessToken);
-
-    toast.add({
-      severity: "success",
-      summary: "Вы вошли в систему",
-      life: 3000,
-    });
-
+    toast.add({ severity: "success", summary: "Вы вошли в систему", life: 3000 });
     goDashboard(response.role);
-  } catch (err) {
-    console.error(err);
-    toast.add({
-      severity: "error",
-      summary: "Ошибка входа",
-      detail: "Неверный логин или пароль",
-      life: 3000,
-    });
+  } catch {
+    toast.add({ severity: "error", summary: "Ошибка входа", detail: "Неверный логин или пароль", life: 3000 });
   }
 };
 
-// ===== РЕГИСТРАЦИЯ =====
-const onFormRegister = async ({valid}) => {
+const onFormRegister = async ({ valid }: { valid: boolean }) => {
   if (!valid) return;
-
   try {
     const response = await api.register({
       username: userName.value,
@@ -192,25 +156,11 @@ const onFormRegister = async ({valid}) => {
       email: email.value,
       role: userType.value === "athlete" ? "Athlete" : "Trainer",
     });
-
     localStorage.setItem("access_token", response.accessToken);
-
-    toast.add({
-      severity: "success",
-      summary: "Вы успешно зарегистрировались",
-      life: 3000,
-    });
-    goDashboard();
-    // после регистрации сразу логиним
-    await onFormLogin({valid: true});
-  } catch (err) {
-    console.error(err);
-    toast.add({
-      severity: "error",
-      summary: "Ошибка регистрации",
-      detail: "Попробуйте снова",
-      life: 3000,
-    });
+    toast.add({ severity: "success", summary: "Вы успешно зарегистрировались", life: 3000 });
+    goDashboard(response.role);
+  } catch {
+    toast.add({ severity: "error", summary: "Ошибка регистрации", detail: "Попробуйте снова", life: 3000 });
   }
 };
 </script>

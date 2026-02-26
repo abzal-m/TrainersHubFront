@@ -114,12 +114,9 @@
 import Button from "primevue/button";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
-import {api} from "@/api";
+import { router } from "@/main";
+import { Routes } from "@/model/router";
 
-const toAuth = async () => {
-  await api.checkAuth()
-}
+const toAuth = () => router.push({ name: Routes.AuthForm });
 </script>
 

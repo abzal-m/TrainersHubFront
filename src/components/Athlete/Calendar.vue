@@ -39,15 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, onMounted} from "vue";
-import {api} from "@/api";
-import {ShortTrainings} from "@/model/types";
-import { Chart } from 'chart.js/auto'
-import {ArcElement, Legend, Tooltip} from "chart.js";
-Chart.register(ArcElement, Tooltip, Legend)
+import { ref, computed, onMounted } from "vue";
+import { api } from "@/api";
+import type { ShortTrainings } from "@/model/types";
+import { Chart } from 'chart.js/auto';
+import { ArcElement, Legend, Tooltip } from "chart.js";
+Chart.register(ArcElement, Tooltip, Legend);
 
-const chart = ref<HTMLCanvasElement | null>(null)
-
+const chart = ref<HTMLCanvasElement | null>(null);
 const today = new Date();
 const selectedDate = ref(today);
 const currentMonth = ref(today.getMonth());
@@ -60,146 +59,74 @@ const monthNames = [
   "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
 ];
 
-onMounted( async () => {
+const monthName = computed(() => monthNames[currentMonth.value]);
+
+const daysInMonth = computed(() => {
+  const firstDay = new Date(currentYear.value, currentMonth.value, 1);
+  const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0);
+  const days: { date: Date; currentMonth: boolean }[] = [];
+
+  let start = firstDay.getDay();
+  start = start === 0 ? 6 : start - 1;
+
+  for (let i = 0; i < start; i++) {
+    days.push({ date: new Date(currentYear.value, currentMonth.value, i - start + 1), currentMonth: false });
+  }
+  for (let i = 1; i <= lastDay.getDate(); i++) {
+    days.push({ date: new Date(currentYear.value, currentMonth.value, i), currentMonth: true });
+  }
+  while (days.length % 7 !== 0) {
+    days.push({ date: new Date(currentYear.value, currentMonth.value, lastDay.getDate() + (days.length - start - lastDay.getDate()) + 1), currentMonth: false });
+  }
+  return days;
+});
+
+const weeks = computed(() => {
+  const result = [];
+  for (let i = 0; i < daysInMonth.value.length; i += 7) {
+    result.push(daysInMonth.value.slice(i, i + 7));
+  }
+  return result;
+});
+
+const isSameDay = (a: Date, b: Date) =>
+  a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
+
+const isToday = (date: Date) => isSameDay(date, new Date());
+const isSelected = (date: Date) => isSameDay(date, selectedDate.value);
+const selectDate = (date: Date) => { selectedDate.value = date; };
+
+const getCardsForDate = (date: Date) =>
+  events.value.filter(e => isSameDay(new Date(e.trainingDay), date));
+
+const prevMonth = () => {
+  if (currentMonth.value === 0) { currentMonth.value = 11; currentYear.value--; }
+  else currentMonth.value--;
+};
+const nextMonth = () => {
+  if (currentMonth.value === 11) { currentMonth.value = 0; currentYear.value++; }
+  else currentMonth.value++;
+};
+
+onMounted(async () => {
   events.value = await api.getAthleteShortTrainings();
-  const done = events.value.filter(t => t.isDone).length
-  const notDone = events.value.filter(t => !t.isDone).length
-  const total = done + notDone
-  const donePct = ((done / total) * 100).toFixed(1)
-  const notDonePct = ((notDone / total) * 100).toFixed(1)
+  const done = events.value.filter(t => t.isDone).length;
+  const total = events.value.length;
+  const donePct = total ? ((done / total) * 100).toFixed(1) : '0';
+  const notDonePct = total ? (((total - done) / total) * 100).toFixed(1) : '0';
 
   new Chart(chart.value!, {
     type: 'doughnut',
     data: {
-      labels: [
-        `Выполнено (${donePct}%)`,
-        `Не выполнено (${notDonePct}%)`
-      ],
-      datasets: [{
-        data: [done, notDone],
-        backgroundColor: ['#22c55e', '#ef4444']
-      }]
+      labels: [`Выполнено (${donePct}%)`, `Не выполнено (${notDonePct}%)`],
+      datasets: [{ data: [done, total - done], backgroundColor: ['#22c55e', '#ef4444'] }],
     },
     options: {
       plugins: {
-        title: {
-          display: true,
-          text: 'Статистика тренировок'
-        },
-        legend: {
-          position: 'top'
-        },
-        datalabels: {
-          color: '#fff',
-          font: { weight: 'bold' },
-          formatter: (value: number, ctx) => {
-            const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0) ?? 1
-            const percentage = ((value / total) * 100).toFixed(1)
-            return `${percentage}%`
-          }
-        }
-      }
-    }
-  })
-})
-
-const monthName = computed(() => monthNames[currentMonth.value]);
-
-// сетка календаря
-const daysInMonth = computed(() => {
-  const firstDay = new Date(currentYear.value, currentMonth.value, 1);
-  const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0);
-
-  const days = [];
-
-  // Преобразуем воскресенье (0) в 6, остальные дни смещаем на -1
-  let start = firstDay.getDay();
-  start = start === 0 ? 6 : start - 1;
-
-  // Добавляем дни предыдущего месяца
-  for (let i = 0; i < start; i++) {
-    const d = new Date(currentYear.value, currentMonth.value, i - start + 1);
-    days.push({ date: d, currentMonth: false });
-  }
-
-  for (let i = 1; i <= lastDay.getDate(); i++) {
-    const d = new Date(currentYear.value, currentMonth.value, i);
-    days.push({ date: d, currentMonth: true });
-  }
-
-  while (days.length % 7 !== 0) {
-    const d = new Date(
-      currentYear.value,
-      currentMonth.value,
-      lastDay.getDate() + (days.length - start - lastDay.getDate()) + 1
-    );
-    days.push({ date: d, currentMonth: false });
-  }
-
-  return days;
+        title: { display: true, text: 'Статистика тренировок' },
+        legend: { position: 'top' },
+      },
+    },
+  });
 });
-
-// Разбиваем дни на недели
-const weeks = computed(() => {
-  const days = daysInMonth.value;
-  const weeks = [];
-  for (let i = 0; i < days.length; i += 7) {
-    weeks.push(days.slice(i, i + 7));
-  }
-  return weeks;
-});
-
-// события на день
-const getCardsForDate = (date: Date) => {
-  return events.value.filter((e) =>
-      new Date(e.trainingDay).getDate() === date.getDate() &&
-      new Date(e.trainingDay).getMonth() === date.getMonth() &&
-      new Date(e.trainingDay).getFullYear() === date.getFullYear()
-  );
-};
-
-// подсветка текущего дня
-const isToday = (date) => {
-  const now = new Date();
-  return (
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear()
-  );
-};
-
-// выбор даты
-const selectDate = (date) => {
-  selectedDate.value = date;
-  console.log(selectedDate.value);
-};
-const isSelected = (date) => {
-  return (
-    selectedDate.value.getDate() === date.getDate() &&
-    selectedDate.value.getMonth() === date.getMonth() &&
-    selectedDate.value.getFullYear() === date.getFullYear()
-  );
-};
-
-// переключение месяцев
-const prevMonth = () => {
-  if (currentMonth.value === 0) {
-    currentMonth.value = 11;
-    currentYear.value--;
-  } else {
-    currentMonth.value--;
-  }
-};
-const nextMonth = () => {
-  if (currentMonth.value === 11) {
-    currentMonth.value = 0;
-    currentYear.value++;
-  } else {
-    currentMonth.value++;
-  }
-};
 </script>
-
-<style scoped>
-
-</style>

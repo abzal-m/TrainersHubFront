@@ -91,7 +91,7 @@ import {ref, onMounted} from 'vue';
 import Card from "primevue/card";
 import Button from 'primevue/button';
 import {api} from "@/api";
-import type {Activity, Segment, Trainings} from "@/model/types";
+import type { Segment, Activity, Trainings } from '@/model/types';
 import {formatDateShort, formatTime, formatTotalDistance, formatTotalDuration} from "@/utils/formatters";
 import CustomDialog from '../tiny/CustomDialog.vue';
 import {localeDateString} from "@/utils/formatters"

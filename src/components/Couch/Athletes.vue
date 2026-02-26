@@ -8,7 +8,7 @@
         <Button class="text-sm" label="Добавить атлета" icon="pi pi-plus" iconPos="left"/>
       </div>
     </div>
-    <div v-for="athlete in athletes" :key="athlete.id" class="my-3">
+    <div v-for="athlete in props.athletes" :key="athlete.id" class="my-3">
       <Card class="rounded-xl shadow-lg">
         <template #content>
           <div class="flex items-start justify-between">
@@ -36,25 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import type { MyAthlete } from "@/model/types";
 
-import {MyAthlete} from "@/model/types";
-import {computed, defineProps, onMounted, ref, watchEffect} from 'vue';
-
-const props = defineProps(
-    ['athletes']
-)
-const athletes = ref<MyAthlete[]>([])
-
-
-watchEffect(() => {
-  athletes.value = props.athletes
-})
-onMounted(() => {
-
-})
-
+const props = defineProps<{ athletes: MyAthlete[] }>();
 </script>
-
-<style scoped>
-
-</style>

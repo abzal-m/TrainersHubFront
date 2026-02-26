@@ -15,22 +15,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
 import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
-import {router} from "@/main";
-import {Routes} from "@/model/router";
-import {useLayout} from '@/composables/useLayout'
-import {api} from "@/api";
+import { router } from "@/main";
+import { Routes } from "@/model/router";
 
-const {isDarkMode, toggleDarkMode} = useLayout();
-const sidebarVisible = ref(false);
-
-const login = async () => {
-  await api.checkAuth()
-}
-
-
+const login = () => router.push({ name: Routes.AuthForm });
 </script>
 
 <style scoped>

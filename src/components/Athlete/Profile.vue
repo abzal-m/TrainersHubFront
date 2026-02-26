@@ -92,23 +92,21 @@
 </template>
 
 <script setup lang="ts">
-
 import Card from "primevue/card";
-import {api} from "@/api";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
-import {clearAccessToken} from "@/utils/auth";
-import {onMounted, ref} from "vue";
-import {AllStats} from "@/model/types";
-import {mToKm} from "@/utils/statsConverter";
-const athleteId = sessionStorage.getItem('athleteId')
-const stats = ref<AllStats>();
+import { api } from "@/api";
+import { router } from "@/main";
+import { Routes } from "@/model/router";
+import { clearAccessToken } from "@/utils/auth";
+import { onMounted, ref } from "vue";
+import type { AllStats } from "@/model/types";
+import { mToKm } from "@/utils/statsConverter";
 
-const CACHE_TTL = 1000 * 60 * 10; // 10 минут
+const athleteId = sessionStorage.getItem('athleteId');
+const stats = ref<AllStats>();
+const CACHE_TTL = 1000 * 60 * 10;
 
 onMounted(async () => {
   const cached = sessionStorage.getItem('athleteStats');
-  console.log(cached);
   if (cached) {
     const { data, timestamp } = JSON.parse(cached);
     if (Date.now() - timestamp < CACHE_TTL) {
@@ -116,30 +114,20 @@ onMounted(async () => {
       return;
     }
   }
-  await getAthleteStats(athleteId!);
+  if (athleteId) {
+    const res = await api.getStravaStats(athleteId);
+    if (res) {
+      stats.value = res;
+      sessionStorage.setItem('athleteStats', JSON.stringify({ data: res, timestamp: Date.now() }));
+    }
+  }
 });
 
-const getAthleteStats = async (athleteId: string) => {
-  const res = await api.getStravaStats(athleteId);
-  console.log(res.all_run_totals, 'res')
-  if (res) {
-    stats.value = res;
-    sessionStorage.setItem(
-        'athleteStats',
-        JSON.stringify({ data: res, timestamp: Date.now() })
-    );
-  }
-};
-
 const exit = async () => {
-  await api.exit()
-  clearAccessToken()
-  router.push({name: Routes.LandingPage});
-}
-
-
+  await api.exit();
+  clearAccessToken();
+  router.push({ name: Routes.LandingPage });
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

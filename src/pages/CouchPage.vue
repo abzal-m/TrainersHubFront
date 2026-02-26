@@ -44,29 +44,25 @@
 
 <script setup lang="ts">
 import Athletes from "@/components/Couch/Athletes.vue";
-import {localeDateString} from "@/utils/formatters"
-import {api} from "@/api/index"
-import {onMounted, ref} from "vue";
-import {MyAthlete} from "@/model/types";
-import {clearAccessToken} from "@/utils/auth";
-import {router} from "@/main";
-import {Routes} from "@/model/router";
+import Main from "@/components/Couch/Main.vue";
+import { localeDateString } from "@/utils/formatters";
+import { api } from "@/api/index";
+import { onMounted, ref } from "vue";
+import type { MyAthlete } from "@/model/types";
+import { clearAccessToken } from "@/utils/auth";
+import { router } from "@/main";
+import { Routes } from "@/model/router";
 
-const myAthletes = ref<MyAthlete[]>([])
-const trainerName = ref('')
-trainerName.value = sessionStorage.getItem('Name') ?? 'Тренер'
+const myAthletes = ref<MyAthlete[]>([]);
+const trainerName = sessionStorage.getItem('Name') ?? 'Тренер';
 
 onMounted(async () => {
-  myAthletes.value = await api.getMyAthletes()
-})
+  myAthletes.value = await api.getMyAthletes();
+});
+
 const exit = async () => {
-  await api.exit()
-  clearAccessToken()
-  await router.push({name: Routes.LandingPage});
-}
-
+  await api.exit();
+  clearAccessToken();
+  await router.push({ name: Routes.LandingPage });
+};
 </script>
-
-<style>
-
-</style>

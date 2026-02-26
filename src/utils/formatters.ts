@@ -1,4 +1,4 @@
-import {Segment} from "@/model/types";
+import type { Segment } from "@/model/types";
 
 export const dateFormatter = (dateString: string) => {
     const dateObject: Date = new Date(dateString);

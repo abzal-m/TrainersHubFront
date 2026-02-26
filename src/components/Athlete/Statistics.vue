@@ -235,7 +235,7 @@ const tabs = computed(() => [
 ]);
 
 // simple debounce
-const debounce = (fn: Function, ms = 300) => {
+const debounce = (fn: (...args: unknown[]) => void, ms = 300) => {
   let t: ReturnType<typeof setTimeout> | null = null;
   return (...args: any[]) => {
     if (t) clearTimeout(t);
@@ -393,9 +393,7 @@ const loadActivities = async () => {
       activities.value = [];
     } else {
       activities.value = res;
-      const athleteId = res[0].athlete.id;
-      console.log(athleteId, 'athleteId');
-      sessionStorage.setItem('athleteId', athleteId);
+      sessionStorage.setItem('athleteId', res[0].athlete.id);
       sessionStorage.setItem('activities', JSON.stringify(res));
     }
   } catch (e) {
@@ -409,14 +407,12 @@ const loadActivities = async () => {
 };
 
 onMounted(async () => {
-  const activitiesFromStorage = JSON.parse(<string>sessionStorage.getItem('activities'))
-  console.log(activitiesFromStorage, 'activitiesFromStorage')
-  if (!activitiesFromStorage || activitiesFromStorage?.length === 0) {
+  const stored = sessionStorage.getItem('activities');
+  if (stored) {
+    activities.value = JSON.parse(stored);
+  } else {
     await loadActivities();
-  }else {
-    activities.value = activitiesFromStorage
   }
-
 });
 
 onBeforeUnmount(() => {
